@@ -1,8 +1,6 @@
-# Dependencias obligatorias (TUI de Rich)
-rich>=13.0
-
-# Dependencia de la interfaz gráfica (opcional):
-# la TUI de Rich funciona sin ella. pillow es requerido por matplotlib
-# en el import de matplotlib.colors y por el backend TkAgg de tkinter.
+# Dependencias de la interfaz gráfica (tkinter + Matplotlib).
+# tkinter ya viene con Python; solo hace falta matplotlib (y pillow,
+# requerido por matplotlib en el import de matplotlib.colors y por el
+# backend TkAgg de tkinter).
 matplotlib>=3.8
 pillow>=10.0

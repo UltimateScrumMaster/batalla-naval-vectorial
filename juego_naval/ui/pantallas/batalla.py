@@ -14,7 +14,7 @@ La lógica de la partida (turnos, energía, viento, victoria/derrota) vive en
     * Construir el vector con sliders y mostrar la predicción en matplotlib.
     * Mostrar el desglose matemático de cada disparo en el log.
 
-Se reutilizan TAL CUAL las funciones puras de interfaz_grafica.py
+Se reutilizan TAL CUAL las funciones puras de juego_naval/juego/laboratorio.py
 (`calcular_preview_disparo`, `dibujar_preview_disparo`) y no se toca ninguna
 regla del juego.
 =================================================================================
@@ -37,7 +37,7 @@ from juego_naval.ui.pantalla_base import PantallaBase
 from juego_naval.juego.sesion import SesionBatalla, EstadoBatalla, COSTOS_HABILIDAD, NOMBRES_HABILIDAD
 from vector2d import Vector2D
 from tablero import Tablero
-from interfaz_grafica import calcular_preview_disparo, dibujar_preview_disparo
+from juego_naval.juego.laboratorio import calcular_preview_disparo, dibujar_preview_disparo
 
 CLAVE_SESION = "sesion"
 

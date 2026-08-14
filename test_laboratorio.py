@@ -1,18 +1,19 @@
 """
 =================================================================================
-TEST: test_interfaz_grafica.py
-Pruebas unitarias de la lógica matemática de la interfaz gráfica (tkinter +
-Matplotlib). Se prueban las funciones puras, sin necesidad de abrir una ventana.
+TEST: test_laboratorio.py
+Pruebas unitarias de la matemática del Laboratorio de Vectores
+(juego_naval/juego/laboratorio.py). Solo funciones puras, sin ventana.
+Migrado desde test_interfaz_grafica.py.
 =================================================================================
 """
 
 import unittest
 
 from vector2d import Vector2D
-from interfaz_grafica import (
+from juego_naval.juego.laboratorio import (
     calcular_resultado_laboratorio,
     calcular_preview_disparo,
-    hay_interfaz_grafica,
+    OPCIONES_LABORATORIO,
 )
 
 
@@ -67,6 +68,11 @@ class TestCalculoLaboratorio(unittest.TestCase):
         with self.assertRaises(ValueError):
             calcular_resultado_laboratorio("no_existe", Vector2D(1, 1), Vector2D(1, 1))
 
+    def test_opciones_registradas(self):
+        self.assertEqual(len(OPCIONES_LABORATORIO), 7)
+        self.assertIn("suma", OPCIONES_LABORATORIO)
+        self.assertIn("proyeccion", OPCIONES_LABORATORIO)
+
 
 class TestPreviewDisparo(unittest.TestCase):
     """Verifica la predicción de impacto dentro/fuera del tablero."""
@@ -93,13 +99,6 @@ class TestPreviewDisparo(unittest.TestCase):
     def test_borde_inferior_izquierdo(self):
         preview = calcular_preview_disparo(Vector2D(0, 0), Vector2D(0, 0))
         self.assertTrue(preview["dentro"])
-
-
-class TestDisponibilidad(unittest.TestCase):
-    """La detección de disponibilidad debe devolver un booleano."""
-
-    def test_devuelve_bool(self):
-        self.assertIsInstance(hay_interfaz_grafica(), bool)
 
 
 if __name__ == "__main__":

@@ -11,10 +11,10 @@ if not exist .venv-build (
     py -3 -m venv .venv-build
 )
 .venv-build\Scripts\pip install --upgrade pip
-.venv-build\Scripts\pip install rich matplotlib pyinstaller
+.venv-build\Scripts\pip install matplotlib pyinstaller
 
-REM --onefile: un solo ejecutable. Sin --windowed para conservar el modo texto
-REM (menú Rich) además de la ventana gráfica.
+REM --onefile: un solo ejecutable. Sin --windowed para poder ver errores en
+REM consola durante el arranque.
 .venv-build\Scripts\pyinstaller --noconfirm --onefile ^
     --name BatallaNavalVectorial ^
     --hidden-import matplotlib.backends.backend_tkagg ^

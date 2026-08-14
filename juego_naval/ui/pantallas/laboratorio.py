@@ -2,11 +2,12 @@
 =================================================================================
 PANTALLA: pantalla_laboratorio.py - Laboratorio de Vectores (migrado)
 =================================================================================
-Migración de `AplicacionVectorGrafica` (interfaz_grafica.py) al patrón de
-pantallas del gestor. Se reutilizan TAL CUAL las funciones puras de
-interfaz_grafica.py (`calcular_resultado_laboratorio`, `calcular_preview_disparo`)
-y las de dibujo (`dibujar_laboratorio`, `dibujar_preview_disparo`); solo cambia
-quién las llama: antes la clase de ventana, ahora esta pantalla.
+Migración de `AplicacionVectorGrafica` (antes en interfaz_grafica.py) al patrón
+de pantallas del gestor. Se reutilizan TAL CUAL las funciones puras de
+juego_naval/juego/laboratorio.py (`calcular_resultado_laboratorio`,
+`calcular_preview_disparo`) y las de dibujo (`dibujar_laboratorio`,
+`dibujar_preview_disparo`); solo cambia quién las llama: antes la clase de
+ventana, ahora esta pantalla.
 
 Cambios respecto a la versión original:
   * `FigureCanvasTkAgg` se crea dentro de `_construir_ui()`.
@@ -34,7 +35,7 @@ except ImportError:
 
 from juego_naval.ui.pantalla_base import PantallaBase
 from vector2d import Vector2D
-from interfaz_grafica import (
+from juego_naval.juego.laboratorio import (
     OPCIONES_LABORATORIO,
     calcular_resultado_laboratorio,
     dibujar_laboratorio,

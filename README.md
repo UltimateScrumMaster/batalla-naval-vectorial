@@ -1,11 +1,15 @@
 # BATALLA NAVAL VECTORIAL
 ### *Aprende Álgebra Lineal, Pitágoras y Proyecciones Jugando*
 
-Un videojuego educativo desarrollado en **Python** que combina una interfaz de
-terminal (**CLI/TUI** con la librería **Rich**) y una **interfaz gráfica**
-(tkinter + Matplotlib) que dibuja los vectores sobre el eje cartesiano con
-fidelidad matemática. Diseñado especialmente para estudiantes de secundaria,
-profesores de matemáticas/física e ingenieros.
+Un videojuego educativo desarrollado en **Python** con una **interfaz gráfica
+unificada** (tkinter + Matplotlib) que dibuja los vectores sobre el eje
+cartesiano con fidelidad matemática. Diseñado especialmente para estudiantes de
+secundaria, profesores de matemáticas/física e ingenieros.
+
+Toda la lógica del juego (álgebra vectorial, batalla por turnos, tutorial,
+laboratorio y manual) vive en módulos **puros** dentro del paquete `juego_naval/`
+y es comprobable con `unittest` sin abrir ventanas; las pantallas solo la
+presentan.
 
 ---
 
@@ -13,9 +17,11 @@ profesores de matemáticas/física e ingenieros.
 
 ### 1. Requisitos Previos
 * Python 3.8 o superior.
-* Librería `rich`:
+* `tkinter` (ya viene con Python en Windows; en Linux:
+  `sudo apt install python3-tk`).
+* Librería `matplotlib` (y `pillow`, que requiere en algunos entornos):
   ```bash
-  pip install rich
+  pip install -r requirements.txt
   ```
 
 ### 2. Ejecutar el Juego
@@ -23,36 +29,30 @@ profesores de matemáticas/física e ingenieros.
 python3 main.py
 ```
 
-### 3. Interfaz Gráfica (opcional, recomendada)
-El menú principal incluye la opción **"Interfaz Gráfica"**: una ventana con
-tkinter + Matplotlib que dibuja los vectores sobre el eje cartesiano con
-fidelidad matemática (flechas con punta real, regla del paralelogramo,
-proyección con sombra perpendicular, zoom interactivo y sliders en tiempo real).
+El menú principal ofrece cuatro pantallas:
+1. **Batalla vs IA:** campaña por turnos contra el *Almirante Vector* (energía,
+   viento, 5 habilidades vectoriales, victoria/derrota).
+2. **Tutorial:** 3 misiones didácticas con historia, pistas y desglose
+   matemático paso a paso.
+3. **Manual:** diccionario de vectores y catálogo de habilidades con su
+   fundamento matemático.
+4. **Laboratorio:** espacio libre con depuración visual en tiempo real para
+   experimentar sumas, restas, escalares, módulo, distancia, producto punto y
+   proyecciones, además del simulador de disparo P + V.
 
-Requisitos según tu sistema operativo:
+> Si matplotlib no está instalado, el juego **no se rompe**: las pantallas que
+> lo necesitan muestran las instrucciones de instalación y permiten volver al
+> menú.
 
-* **Windows:** Python ya trae `tkinter`. Solo instala matplotlib:
-  ```bash
-  pip install matplotlib
-  ```
-* **Linux (Debian/Ubuntu):** instala `tkinter` del sistema y matplotlib:
-  ```bash
-  sudo apt install python3-tk
-  pip install matplotlib
-  ```
-
-> Si tkinter o matplotlib no están instalados, el juego **no se rompe**: el
-> menú muestra las instrucciones y el modo texto (Rich) sigue funcionando.
-
-### 4. Ejecutar las Pruebas Unitarias Automatizadas
+### 3. Ejecutar las Pruebas Unitarias Automatizadas
 ```bash
 python3 -m unittest discover -s . -p "test_*.py"
 ```
 
-### 5. Empaquetar un Ejecutable (cualquier máquina Linux o Windows)
+### 4. Empaquetar un Ejecutable (cualquier máquina Linux o Windows)
 
-Para distribuir el juego como un único ejecutable que incluye tkinter,
-matplotlib y Rich (sin que los alumnos instalen nada), se usa **PyInstaller**:
+Para distribuir el juego como un único ejecutable que incluye tkinter y
+matplotlib (sin que los alumnos instalen nada), se usa **PyInstaller**:
 
 * **Linux** (genera `dist/BatallaNavalVectorial`):
   ```bash
@@ -114,19 +114,22 @@ En el juego vas a ver distintos tipos de vectores. Esta es la "traducción" de c
 
 ---
 
-### 2.1 La Pseudo-Interfaz Gráfica (Pseudo-GUI) en Consola
+### 2.1 Pantallas Tácticas y Planos Cartesianos
 
-Para que nadie se pierda con las coordenadas, el juego incluye una **pantalla táctica visual en tiempo real**. Antes de disparar, verás:
+Para que nadie se pierda con las coordenadas, el juego dibuja **plano cartesiano
+en tiempo real**:
 
 * **El Plano Cartesiano dibujado** con ejes $X$ e $Y$ numerados (0 a 9).
-* **`●` (Punto verde):** La posición actual de tu barco que dispara.
-* **`+` (Trazos amarillos):** El recorrido exacto de tu vector de disparo, casilla por casilla.
-* **`◎` (Mira roja):** La coordenada exacta donde impactará tu proyectil.
+* **`●` (Punto):** La posición actual de tu barco que dispara.
+* **`+` (Trazos):** El recorrido exacto de tu vector de disparo, casilla por casilla.
+* **`◎` (Mira):** La coordenada exacta donde impactará tu proyectil.
 * **Mensaje de validez:** Te indica en color verde si el disparo cae **dentro** del área de combate, o en color rojo si cae **fuera** (para que puedas corregirlo antes de gastar el turno).
 
-El juego te pedirá confirmación: *"¿Confirmar este vector de disparo? (s/n)"*. Si respondes `n`, puedes corregir tus números y volver a ver la previsualización. Esto convierte al juego en un **tutorial visual de vectores**, porque puedes "probar" un vector y observar la flecha que dibuja antes de comprometerte.
-
-En el **Tutorial Guiado**, además, se muestra un **Dashboard dividido**: a la izquierda la misión, la historia y la pista matemática; a la derecha el plano cartesiano con tu barco y el objetivo ya marcados.
+En la **Batalla vs IA** puedes ajustar el vector con sliders y ver la predicción
+antes de disparar. En el **Tutorial Guiado** el plano ya muestra tu barco y el
+objetivo marcados, con la historia y la pista matemática a un costado. Esto
+convierte al juego en un **tutorial visual de vectores**, porque puedes "probar"
+un vector y observar la flecha que dibuja antes de comprometerte.
 
 ---
 
@@ -188,14 +191,12 @@ En el **Tutorial Guiado**, además, se muestra un **Dashboard dividido**: a la i
 
 ### 5. Modos de Juego Incluidos
 
-El menú principal (opciones 1-7) ofrece:
+El menú principal ofrece:
 
-1. **Batalla vs Inteligencia Artificial** (opción 1): Campaña por turnos donde te enfrentas al *Almirante Vector*.
-2. **Tutorial Guiado** (opción 2): 3 misiones didácticas con historias paso a paso para aprender las fórmulas.
-3. **Laboratorio Sandbox & Calculadora Vectorial** (opción 3): Un espacio libre con depuración visual en tiempo real para experimentar sumas, restas, ángulos, Pitágoras, producto punto y proyecciones.
-4. **Manual de Fórmulas y Habilidades** (opción 4): Diccionario de vectores y catálogo de habilidades con su fundamento matemático.
-5. **Interfaz Gráfica** (opción 5): Ventana con el Laboratorio de Vectores y el Simulador de Disparo sobre el plano cartesiano (tkinter + Matplotlib).
-6. **Batalla Naval Gráfica** (opción 6): La campaña completa jugable en una ventana tkinter: tableros clicables, sliders para construir el vector, predicción en vivo con Matplotlib y desglose matemático paso a paso (misma lógica que la opción 1).
+1. **Batalla vs Inteligencia Artificial:** Campaña por turnos donde te enfrentas al *Almirante Vector*.
+2. **Tutorial Guiado:** 3 misiones didácticas con historias paso a paso para aprender las fórmulas.
+3. **Manual de Fórmulas y Habilidades:** Diccionario de vectores y catálogo de habilidades con su fundamento matemático.
+4. **Laboratorio Sandbox & Calculadora Vectorial:** Un espacio libre con depuración visual en tiempo real para experimentar sumas, restas, escalares, módulo, distancia, producto punto y proyecciones, además del Simulador de Disparo (P + V) sobre el plano cartesiano.
 
 ---
 
@@ -207,28 +208,46 @@ Esta sección describe la arquitectura de software, modelado algebraico formal, 
 
 ### 1. Arquitectura del Software y Modularidad
 
-El proyecto está diseñado bajo principios de **Separación de Responsabilidades (SoC)** y **Clean Code**, sin ofuscación y con alta cohesión:
+El proyecto está diseñado bajo principios de **Separación de Responsabilidades (SoC)** y **Clean Code**, separando la **lógica pura** (comprobable sin ventanas) de la **presentación** (pantallas Tkinter):
 
 ```
 proyecto_vector/
-├── vector2d.py        # Clase algebraica Vector2D (Espacio vectorial R^2, operadores sobrecargados)
-├── barco.py           # Entidad Barco (Geometría discreta paramétrica sobre Z^2)
-├── tablero.py         # Plano Cartesiano 2D, gestión de colisiones e indexación
-├── habilidades.py     # Patrón Strategy para las operaciones de combate
-├── ia.py              # Inteligencia Artificial enemiga (Heurística de Caza y Exploración)
-├── interfaz.py        # Renderizado TUI con Rich (Layouts, Grillas Cartesianas y Tablas)
-├── interfaz_grafica.py# Ventana tkinter + Matplotlib (Laboratorio de Vectores y Simulador de Disparo)
-├── juego_grafico.py  # Batalla Naval jugable en ventana gráfica (tkinter Canvas + Matplotlib)
-├── juego.py           # Bucle de juego (Game Loop), Modo Sandbox y Tutoriales
-├── main.py            # CLI Entry Point (menú principal con fallback a Rich)
-├── test_vector2d.py   # Pruebas unitarias de álgebra lineal
-├── test_juego.py      # Pruebas unitarias de mecánicas de juego y colisiones
-├── test_interfaz_grafica.py  # Pruebas de la lógica matemática de la GUI
-├── test_juego_grafico.py     # Pruebas de la batalla gráfica (disparos, costos y smoke test)
-├── requirements.txt   # Dependencias de Python
-├── build_linux.sh     # Genera ejecutable para Linux (PyInstaller)
-└── build_windows.bat  # Genera ejecutable para Windows (PyInstaller)
+├── vector2d.py                # Clase algebraica Vector2D (Espacio vectorial R^2, operadores sobrecargados)
+├── barco.py                   # Entidad Barco (Geometría discreta paramétrica sobre Z^2)
+├── tablero.py                 # Plano Cartesiano 2D, gestión de colisiones e indexación
+├── habilidades.py             # Patrón Strategy para las operaciones de combate
+├── ia.py                      # Inteligencia Artificial enemiga (Heurística de Caza y Exploración)
+├── main.py                    # Entry Point: única forma de lanzar el juego
+├── requirements.txt           # Dependencias de Python
+├── build_linux.sh             # Genera ejecutable para Linux (PyInstaller)
+├── build_windows.bat          # Genera ejecutable para Windows (PyInstaller)
+├── BatallaNavalVectorial.spec # Especificación de PyInstaller
+├── test_vector2d.py           # Pruebas unitarias de álgebra lineal
+├── test_juego.py              # Pruebas unitarias de mecánicas de juego y colisiones
+├── test_laboratorio.py        # Pruebas de la matemática del Laboratorio
+├── test_sesion.py             # Pruebas de la partida (SesionBatalla) y smoke test de la pantalla
+├── test_tutorial.py           # Pruebas del contenido pedagógico del Tutorial
+└── juego_naval/
+    ├── app.py                 # Registro central de pantallas + main() de la aplicación
+    └── juego/
+    │   ├── sesion.py          # Sesión de partida: máquina de estados + registro único de habilidades
+    │   ├── tutorial.py        # Contenido puro del Tutorial (3 misiones + evaluación)
+    │   ├── laboratorio.py     # Matemática pura y dibujo del Laboratorio (funciones puras)
+    │   └── guia.py            # Manual: diccionario de vectores y catálogo de habilidades
+    └── ui/
+        ├── gestor_pantallas.py   # Screen Manager Tkinter (navegación + estado compartido)
+        ├── pantalla_base.py      # Clase base de toda pantalla (hooks _construir_ui/_limpiar)
+        └── pantallas/
+            ├── menu_principal.py # Menú principal
+            ├── batalla.py        # Batalla vs IA (Canvas + Matplotlib embebido)
+            ├── tutorial.py       # Tutorial guiado
+            ├── guia.py           # Manual de fórmulas (tablas con scroll)
+            └── laboratorio.py    # Laboratorio y Simulador de Disparo
 ```
+
+**Principio rector:** ningún archivo de la raíz importa `tkinter` ni
+`matplotlib` (salvo a través de las pantallas); toda la matemática vive en
+módulos puros testeados por `unittest`.
 
 ---
 
@@ -264,60 +283,57 @@ El sistema incorpora un motor de depuración que captura el estado algebraico de
   * `formula`: Notación formal en formato algebraico.
   * `pasos`: Lista de cadenas con la sustitución aritmética término a término.
   * `resultado`: Vector o escalar resultante.
-* **Visualización:** El componente `renderizar_panel_depuracion()` en `interfaz.py` dibuja un panel de doble borde con código de colores según el autor (**JUGADOR** en cian o **IA** en magenta), permitiendo la verificación pedagógica instantánea en el aula.
+* **Visualización:** la pantalla de Batalla muestra un **log pedagógico** con el desglose paso a paso tras cada disparo y cada turno de la IA, con código de colores según el autor (**JUGADOR** o **IA**), permitiendo la verificación pedagógica instantánea en el aula.
 
 ---
 
-### 3.1 Sistema de Pseudo-GUI y Rasterización de Vectores (`interfaz.py`)
+### 3.1 Sesión de Partida y Máquina de Estados (`juego_naval/juego/sesion.py`)
 
-El renderizado visual se apoya en dos componentes clave:
+La lógica de una partida completa vive en un solo lugar, sin duplicados entre
+"modo texto" y "modo gráfico" (como ocurría antes de la migración):
 
-1. **`trazar_vector_en_tablero(tablero, origen, destino)`:** Implementa **rasterización discreta** de la trayectoria vectorial mediante interpolación lineal paramétrica sobre $\mathbb{Z}^2$:
-   $$t_k = \frac{k}{N}, \quad N = \lceil 2 \cdot \|\vec{d}\| \rceil, \quad \vec{p}_k = \vec{P}_{origen} + t_k \cdot \vec{d}$$
-   Escribe marcadores temporales (`●`, `+`, `◎`) en `Tablero.marcas_temporales`, que se renderizan con prioridad sobre la niebla de guerra.
+* **`EstadoBatalla`:** `TURNO_JUGADOR`, `TURNO_IA`, `VICTORIA`, `DERROTA`.
+* **Registro único de habilidades:** `SKILLS` se deriva de las clases de
+  `habilidades.py`, y de ahí `COSTOS_HABILIDAD` y `NOMBRES_HABILIDAD`; no hay
+  copias de costos ni nombres en ningún otro módulo.
+* **`ejecutar_habilidad()`:** función pura que despacha la habilidad contra el
+  tablero enemigo (sin tocar estado).
+* **`SesionBatalla`:** controlador de la partida. Reglas de turno, energía
+  (`min(6, energía+1)`), viento aleatorio cada 3 turnos y victoria/derrota
+  viven **solo** aquí. El estado se guarda en `gestor.compartido["sesion"]`
+  para sobrevivir a los cambios de pantalla.
 
-2. **`mostrar_pantalla_mision_guiada(..., tablero)`:** Utiliza `rich.layout.Layout` para construir un **Dashboard de dos columnas** (información de la misión / plano cartesiano), ofreciendo una experiencia tipo GUI embebida en la terminal.
+### 3.2 Laboratorio de Vectores (`juego_naval/juego/laboratorio.py`)
 
-El flujo de interacción `pedir_vector_con_previsualizacion()` en `juego.py` implementa el patrón **previsualizar → confirmar → ejecutar**: dibuja la predicción del impacto en el radar enemigo y solicita confirmación (`s/n`) antes de gastar energía táctica, evitando disparos nulos o fuera de rango.
+La representación gráfica usa una arquitectura estándar en apps científicas de
+Python: **tkinter es la cáscara** (menú, sliders, pestañas) y **Matplotlib vive
+embebido como widget** mediante `FigureCanvasTkAgg`.
 
----
+El Laboratorio incluye:
 
-### 3.2 Interfaz Gráfica de Vectores (`interfaz_grafica.py`)
-
-La representación gráfica usa una arquitectura híbrida estándar en apps
-científicas de Python: **tkinter es la cáscara** (menú, sliders, pestañas) y
-**Matplotlib vive embebido como widget** mediante `FigureCanvasTkAgg`.
-
-Incluye dos pestañas:
-
-1. **Laboratorio de Vectores:** operaciones (suma, resta, escalar, módulo,
-   distancia, producto punto, proyección) sobre el plano cartesiano con
-   flechas de longitud proporcional a la magnitud, regla del paralelogramo
-   (suma/resta), sombra perpendicular (proyección) y desglose paso a paso.
-   Los sliders modifican los vectores en tiempo real y la toolbar de
-   Matplotlib ofrece zoom, desplazamiento y guardado a PNG.
+1. **Operaciones de vectores:** suma, resta, escalar, módulo, distancia,
+   producto punto y proyección, sobre el plano cartesiano con flechas de
+   longitud proporcional a la magnitud, regla del paralelogramo (suma/resta),
+   sombra perpendicular (proyección) y desglose paso a paso. Los sliders
+   modifican los vectores en tiempo real y la toolbar de Matplotlib ofrece
+   zoom, desplazamiento y guardado a PNG.
 
 2. **Simulador de Disparo (P + V):** réplica del tablero 10x10 donde se dibuja
    la flecha del vector de disparo desde la posición del barco, se marca el
-   punto de impacto y se indica en verde/rojo si cae dentro o fuera del área
-   de combate.
+   punto de impacto y se indica en verde/rojo si cae dentro o fuera del área de
+   combate.
 
 El módulo separa **funciones puras** (`calcular_resultado_laboratorio`,
 `calcular_preview_disparo`) de las **funciones de dibujo** (`dibujar_flecha`,
-`dibujar_laboratorio`), por lo que toda la matemática es comprobable con
-`unittest` sin abrir una ventana. `hay_interfaz_grafica()` detecta si la
-máquina tiene tkinter, matplotlib y pantalla; si no, `main.py` muestra las
-instrucciones de instalación y el juego continúa en modo texto.
+`dibujar_laboratorio`, `dibujar_preview_disparo`), por lo que toda la
+matemática es comprobable con `unittest` sin abrir una ventana.
 
----
+### 3.3 Batalla Naval Gráfica (`juego_naval/ui/pantallas/batalla.py`)
 
-### 3.3 Batalla Naval Gráfica (`juego_grafico.py`)
-
-La versión **jugable** de la campaña en una sola ventana tkinter. Reutiliza
-EXACTAMENTE la lógica de terminal: instancia `PartidaBatallaNaval` de `juego.py`,
-ejecuta las mismas habilidades de `habilidades.py` vía la función pura
-`ejecutar_ataque_jugador()` y delega el turno enemigo a
-`IAEnemiga.decidir_turno()`.
+La versión **jugable** de la campaña. Reutiliza exactamente la lógica pura:
+instancia `SesionBatalla` de `juego_naval/juego/sesion.py`, ejecuta las
+habilidades de `habilidades.py` vía `ejecutar_habilidad()` y delega el turno
+enemigo a `IAEnemiga.decidir_turno()`.
 
 Vista y controles:
 
@@ -328,15 +344,27 @@ Vista y controles:
    k del Torpedo. Solo se activan los sliders que la habilidad elegida necesita.
 3. **Predicción en vivo:** un mini-plano Matplotlib embebido dibuja la flecha
    P + V y un recuadro verde/rojo sobre la casilla de impacto (verde = dentro,
-   rojo = fuera), usando las funciones puras de `interfaz_grafica.py`.
+   rojo = fuera), usando las funciones puras de `juego_naval/juego/laboratorio.py`.
 4. **Log pedagógico:** tras cada disparo y cada turno de la IA se muestra el
-   desglose matemático paso a paso (mismas cadenas `explicacion` que en
-   terminal), reforzando el aprendizaje de fórmulas.
-5. **Energía y viento:** la barra superior muestra la energía táctica (misma
-   regla de recarga `min(6, energía+1)` y viento aleatorio cada 3 turnos).
+   desglose matemático paso a paso (mismas cadenas `explicacion`), reforzando
+   el aprendizaje de fórmulas.
+5. **Energía y viento:** la barra superior muestra la energía táctica (regla de
+   recarga `min(6, energía+1)` y viento aleatorio cada 3 turnos).
 
-Toda la matemática es testeable sin ventana (`ejecutar_ataque_jugador`,
-`COSTOS_HABILIDAD`), y el smoke test abre/cierra la ventana automáticamente.
+### 3.4 Gestor de Pantallas (`juego_naval/ui/gestor_pantallas.py`)
+
+Una sola ventana raíz (`tk.Tk`). Cada pantalla es un `Frame` que se muestra y
+se destruye bajo demanda, sin abrir ventanas nuevas:
+
+* `gestor.ir(nombre)` — navega guardando la actual en el historial.
+* `gestor.reemplazar(nombre)` — navega sin guardar la actual.
+* `gestor.volver()` — regresa a la pantalla anterior.
+* `gestor.compartido` — dict con el estado que sobrevive a los cambios de
+  pantalla (por ejemplo, `"sesion"` durante la batalla).
+
+Cada pantalla hereda de `PantallaBase`, implementa `_construir_ui()` y puede
+sobreescribir el hook `_limpiar()` para liberar recursos explícitos (las
+pantallas con Matplotlib cierran su figura con `plt.close`).
 
 ---
 
@@ -353,19 +381,19 @@ La IA implementa una máquina de estados finita con lógica vectorial:
 
 ### 5. Cobertura de Pruebas Unitarias (`unittest`)
 
-Se han desarrollado **43 casos de prueba unitarios** que validan:
-* `test_suma_vectores`, `test_resta_vectores`, `test_multiplicacion_escalar`
-* `test_magnitud_pitagoras`, `test_distancia_euclidiana`
-* `test_producto_punto`, `test_proyeccion_ortogonal`
-* `test_desglose_explicativo` (Generación correcta del log de depuración)
-* `test_posicionamiento_barco` (Ecuación paramétrica de celdas)
-* `test_tablero_disparos` (Detección de agua, impacto, fuera de límite y colisiones)
-* `test_habilidad_suma`, `test_habilidad_viento`, `test_habilidad_sonar`, `test_habilidad_proyeccion_orbital`
-* `test_interfaz_grafica.py`: 16 pruebas de la lógica matemática de la interfaz
-  gráfica (operaciones del laboratorio y predicción de impacto dentro/fuera).
-* `test_juego_grafico.py`: 10 pruebas de la batalla gráfica (costos de
-  habilidades, ejecución de cada disparo sobre el tablero, rechazo de vectores
-  nulos y smoke test que abre/cierra la ventana).
+Se han desarrollado **65 casos de prueba unitarios** que validan:
+* `test_vector2d.py` (9): álgebra lineal (suma, resta, escalar, magnitud,
+  distancia, producto punto, proyección, desglose explicativo).
+* `test_juego.py` (7): mecánicas de juego (posicionamiento de barcos, disparos,
+  agua/impacto/fuera de límite y colisiones, habilidades de combate).
+* `test_laboratorio.py` (16): matemática del Laboratorio (7 operaciones +
+  opciones registradas + predicción de impacto dentro/fuera).
+* `test_sesion.py` (23): costos y nombres de habilidades, ejecución de cada
+  disparo sobre el tablero (incluido el rechazo de vectores nulos), máquina de
+  estados de `SesionBatalla` (energía, tope, victoria/derrota, turno de la IA)
+  y smoke test que abre/cierra la PantallaBatalla.
+* `test_tutorial.py` (10): estructura de las 3 misiones y evaluación de
+  acierto/error (vectorial y escalar).
 
 Para correr la suite completa:
 ```bash
