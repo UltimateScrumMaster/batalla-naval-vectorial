@@ -18,6 +18,7 @@ from juego_naval.ui.pantalla_base import PantallaBase
 # migrados (batalla, tutorial, sandbox) a medida que se migren.
 _OPCIONES = (
     ("batalla", "Batalla Naval vs IA"),
+    ("tutorial", "Tutorial Guiado por Misiones"),
     ("laboratorio", "Laboratorio de Vectores (Sandbox)"),
 )
 

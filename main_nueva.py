@@ -17,6 +17,7 @@ from juego_naval.ui.gestor_pantallas import GestorPantallas
 from juego_naval.ui.pantallas.menu_principal import PantallaMenuPrincipal
 from juego_naval.ui.pantallas.laboratorio import PantallaLaboratorio
 from juego_naval.ui.pantallas.batalla import PantallaBatalla
+from juego_naval.ui.pantallas.tutorial import PantallaTutorial
 
 
 def main() -> None:
@@ -29,6 +30,7 @@ def main() -> None:
     gestor.registrar("menu", PantallaMenuPrincipal)
     gestor.registrar("laboratorio", PantallaLaboratorio)
     gestor.registrar("batalla", PantallaBatalla)
+    gestor.registrar("tutorial", PantallaTutorial)
     gestor.reemplazar("menu")
 
     raiz.mainloop()
