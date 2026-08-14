@@ -19,6 +19,7 @@ from juego_naval.ui.pantalla_base import PantallaBase
 _OPCIONES = (
     ("batalla", "Batalla Naval vs IA"),
     ("tutorial", "Tutorial Guiado por Misiones"),
+    ("guia", "Manual de Fórmulas y Habilidades"),
     ("laboratorio", "Laboratorio de Vectores (Sandbox)"),
 )
 
