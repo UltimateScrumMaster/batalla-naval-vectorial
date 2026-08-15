@@ -9,8 +9,8 @@ intentos del alumno. Solo funciones puras.
 
 import unittest
 
-from vector2d import Vector2D
-from juego_naval.juego.tutorial import (
+from juego_naval.dominio.vector2d import Vector2D
+from juego_naval.logica.tutorial import (
     MISIONES,
     es_mision_vectorial,
     evaluar_intento_tutorial,

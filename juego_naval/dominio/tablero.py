@@ -14,8 +14,8 @@ un plano escolar real:
 from __future__ import annotations
 import random
 from typing import List, Optional, Tuple, Set, Dict, Any
-from vector2d import Vector2D
-from barco import Barco, crear_flota_estandar
+from juego_naval.dominio.vector2d import Vector2D
+from juego_naval.dominio.barco import Barco, crear_flota_estandar
 
 
 class ResultadoDisparo:

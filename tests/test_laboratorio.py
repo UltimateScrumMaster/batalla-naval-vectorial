@@ -9,8 +9,8 @@ Migrado desde test_interfaz_grafica.py.
 
 import unittest
 
-from vector2d import Vector2D
-from juego_naval.juego.laboratorio import (
+from juego_naval.dominio.vector2d import Vector2D
+from juego_naval.logica.laboratorio import (
     calcular_resultado_laboratorio,
     calcular_preview_disparo,
     OPCIONES_LABORATORIO,

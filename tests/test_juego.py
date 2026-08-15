@@ -11,17 +11,17 @@ Verifica la mecánica del juego:
 """
 
 import unittest
-from vector2d import Vector2D
-from barco import Barco, crear_flota_estandar
-from tablero import Tablero
-from habilidades import (
+from juego_naval.dominio.vector2d import Vector2D
+from juego_naval.dominio.barco import Barco, crear_flota_estandar
+from juego_naval.dominio.tablero import Tablero
+from juego_naval.logica.habilidades import (
     DisparoBasicoSuma,
     DisparoConViento,
     TorpedoEscalar,
     SonarDistanciaEuclidiana,
     CanonProyeccionOrbital
 )
-from ia import IAEnemiga
+from juego_naval.logica.ia import IAEnemiga
 
 
 class TestMecanicasJuego(unittest.TestCase):

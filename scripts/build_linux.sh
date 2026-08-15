@@ -6,21 +6,16 @@
 # funciona en la máquina destino sin instalar nada más.
 # =============================================================================
 set -euo pipefail
-cd "$(dirname "$0")"
+cd "$(dirname "$0")/.."   # scripts/ -> raíz del proyecto
 
 if [ ! -d .venv-build ]; then
     python3 -m venv .venv-build
 fi
 .venv-build/bin/pip install --upgrade pip
-.venv-build/bin/pip install matplotlib pyinstaller
+.venv-build/bin/pip install -r scripts/requirements-build.txt
 
-# --onefile: un solo ejecutable. Sin --windowed para poder ver errores en
-# consola durante el arranque.
-.venv-build/bin/pyinstaller --noconfirm --onefile \
-    --name BatallaNavalVectorial \
-    --hidden-import matplotlib.backends.backend_tkagg \
-    --hidden-import PIL._tkinter_finder \
-    main.py
+# Onefile y console están definidos en el spec (scripts/BatallaNavalVectorial.spec).
+.venv-build/bin/pyinstaller --noconfirm scripts/BatallaNavalVectorial.spec
 
 echo
 echo "Listo. Ejecutable creado en: dist/BatallaNavalVectorial"

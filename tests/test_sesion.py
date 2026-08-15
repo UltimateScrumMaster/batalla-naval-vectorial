@@ -13,10 +13,10 @@ import unittest
 
 os.environ["BNV_DIAG"] = "0"
 
-from vector2d import Vector2D
-from tablero import Tablero
-from barco import Barco
-from juego_naval.juego.sesion import (
+from juego_naval.dominio.vector2d import Vector2D
+from juego_naval.dominio.tablero import Tablero
+from juego_naval.dominio.barco import Barco
+from juego_naval.logica.sesion import (
     SesionBatalla,
     EstadoBatalla,
     COSTOS_HABILIDAD,

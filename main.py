@@ -6,7 +6,7 @@ Punto de entrada principal de la aplicación. Lanza la arquitectura unificada
 (tkinter + gestor de pantallas) definida en juego_naval/app.py.
 
 Ejecución:
-    ./venv/bin/python main.py        # intérprete del entorno virtual (recomendado)
+    ./.venv/bin/python main.py        # intérprete del entorno virtual (recomendado)
     python3 main.py                  # intérprete del sistema: se relanza solo
                                      # con el venv si este tiene las dependencias
 =============================================================================

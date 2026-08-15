@@ -1,0 +1,4 @@
+# Dependencias del entorno de BUILD (scripts/) para generar el ejecutable
+# con PyInstaller. Las de runtime están en requirements.txt (raíz).
+matplotlib
+pyinstaller

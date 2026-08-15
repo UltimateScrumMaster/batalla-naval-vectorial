@@ -15,7 +15,7 @@ Verifica la corrección matemática de todas las operaciones vectoriales:
 
 import unittest
 import math
-from vector2d import Vector2D
+from juego_naval.dominio.vector2d import Vector2D
 
 
 class TestVector2D(unittest.TestCase):

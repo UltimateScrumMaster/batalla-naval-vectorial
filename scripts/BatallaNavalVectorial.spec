@@ -1,9 +1,15 @@
 # -*- mode: python ; coding: utf-8 -*-
+# Spec de PyInstaller (onefile). Vive en scripts/ y resuelve la entrada main.py
+# de forma absoluta hacia la raíz del proyecto, para que el build funcione
+# se invoque desde donde se invoque.
 
+import os
+
+raiz = os.path.abspath(os.path.join(SPECPATH, os.pardir))
 
 a = Analysis(
-    ['main.py'],
-    pathex=[],
+    [os.path.join(raiz, 'main.py')],
+    pathex=[raiz],
     binaries=[],
     datas=[],
     hiddenimports=['matplotlib.backends.backend_tkagg', 'PIL._tkinter_finder'],

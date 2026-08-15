@@ -1,6 +1,6 @@
 """
 =================================================================================
-MÓDULO: juego_naval/juego/tutorial.py - Tutorial guiado (misiones pedagógicas)
+MÓDULO: juego_naval/logica/tutorial.py - Tutorial guiado (misiones pedagógicas)
 =================================================================================
 Contenido pedagógico puro del Tutorial Guiado, extraído de
 `juego.ejecutar_tutorial_guiado`. Solo datos y funciones comprobables; la
@@ -10,7 +10,7 @@ presentación (Tkinter) vive en juego_naval/ui/pantallas/tutorial.py.
 
 from typing import Any, Dict, Tuple
 
-from vector2d import Vector2D
+from juego_naval.dominio.vector2d import Vector2D
 
 # Misiones del tutorial, con su historia, objetivos y solución pedagógica.
 MISIONES: Tuple[Dict[str, Any], ...] = (

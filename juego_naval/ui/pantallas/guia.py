@@ -14,7 +14,7 @@ from tkinter import ttk
 
 from juego_naval.ui.pantalla_base import PantallaBase
 from juego_naval.diag import diag
-from juego_naval.juego.guia import (
+from juego_naval.logica.guia import (
     DICCIONARIO_VECTORES,
     CATALOGO_HABILIDADES,
     REGLA_DE_ORO,

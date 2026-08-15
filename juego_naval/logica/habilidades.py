@@ -11,8 +11,8 @@ para que los estudiantes comprendan la matemática detrás del juego.
 from __future__ import annotations
 import math
 from typing import Dict, Any, List, Tuple, Optional
-from vector2d import Vector2D
-from tablero import Tablero, ResultadoDisparo
+from juego_naval.dominio.vector2d import Vector2D
+from juego_naval.dominio.tablero import Tablero, ResultadoDisparo
 
 
 class HabilidadVectorial:

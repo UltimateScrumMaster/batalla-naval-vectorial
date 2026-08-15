@@ -8,8 +8,8 @@ secundaria, profesores de matemáticas/física e ingenieros.
 
 Toda la lógica del juego (álgebra vectorial, batalla por turnos, tutorial,
 laboratorio y manual) vive en módulos **puros** dentro del paquete `juego_naval/`
-y es comprobable con `unittest` sin abrir ventanas; las pantallas solo la
-presentan.
+(separados en `dominio/`, `logica/` y `ui/`) y es comprobable con `unittest` sin
+abrir ventanas; las pantallas solo la presentan.
 
 ---
 
@@ -52,7 +52,7 @@ El menú principal ofrece cuatro pantallas:
 
 ### 3. Ejecutar las Pruebas Unitarias Automatizadas
 ```bash
-python3 -m unittest discover -s . -p "test_*.py"
+./.venv/bin/python -m unittest discover -s tests -p "test_*.py"
 ```
 
 ### 4. Empaquetar un Ejecutable (cualquier máquina Linux o Windows)
@@ -62,16 +62,18 @@ matplotlib (sin que los alumnos instalen nada), se usa **PyInstaller**:
 
 * **Linux** (genera `dist/BatallaNavalVectorial`):
   ```bash
-  bash build_linux.sh
+  bash scripts/build_linux.sh
   ```
 * **Windows** (genera `dist\BatallaNavalVectorial.exe`):
   ```bat
-  build_windows.bat
+  scripts\build_windows.bat
   ```
 
-El ejecutable sirve en cualquier máquina del mismo sistema operativo, tenga o
-no Python instalado. En Windows, `tkinter` ya viene con Python; en Linux, el
-script pide `sudo apt install python3-tk` solo en la máquina de compilación.
+El build se configura desde el spec `scripts/BatallaNavalVectorial.spec` (onefile
++ consola); el ejecutable sirve en cualquier máquina del mismo sistema operativo,
+tenga o no Python instalado. En Windows, `tkinter` ya viene con Python; en
+Linux, el script pide `sudo apt install python3-tk` solo en la máquina de
+compilación.
 
 ---
 
@@ -218,42 +220,44 @@ El proyecto está diseñado bajo principios de **Separación de Responsabilidade
 
 ```
 proyecto_vector/
-├── vector2d.py                # Clase algebraica Vector2D (Espacio vectorial R^2, operadores sobrecargados)
-├── barco.py                   # Entidad Barco (Geometría discreta paramétrica sobre Z^2)
-├── tablero.py                 # Plano Cartesiano 2D, gestión de colisiones e indexación
-├── habilidades.py             # Patrón Strategy para las operaciones de combate
-├── ia.py                      # Inteligencia Artificial enemiga (Heurística de Caza y Exploración)
-├── main.py                    # Entry Point: única forma de lanzar el juego
-├── requirements.txt           # Dependencias de Python
-├── build_linux.sh             # Genera ejecutable para Linux (PyInstaller)
-├── build_windows.bat          # Genera ejecutable para Windows (PyInstaller)
-├── BatallaNavalVectorial.spec # Especificación de PyInstaller
-├── test_vector2d.py           # Pruebas unitarias de álgebra lineal
-├── test_juego.py              # Pruebas unitarias de mecánicas de juego y colisiones
-├── test_laboratorio.py        # Pruebas de la matemática del Laboratorio
-├── test_sesion.py             # Pruebas de la partida (SesionBatalla) y smoke test de la pantalla
-├── test_tutorial.py           # Pruebas del contenido pedagógico del Tutorial
-└── juego_naval/
-    ├── app.py                 # Registro central de pantallas + main() de la aplicación
-    └── juego/
-    │   ├── sesion.py          # Sesión de partida: máquina de estados + registro único de habilidades
-    │   ├── tutorial.py        # Contenido puro del Tutorial (3 misiones + evaluación)
-    │   ├── laboratorio.py     # Matemática pura y dibujo del Laboratorio (funciones puras)
-    │   └── guia.py            # Manual: diccionario de vectores y catálogo de habilidades
-    └── ui/
-        ├── gestor_pantallas.py   # Screen Manager Tkinter (navegación + estado compartido)
-        ├── pantalla_base.py      # Clase base de toda pantalla (hooks _construir_ui/_limpiar)
-        └── pantallas/
-            ├── menu_principal.py # Menú principal
-            ├── batalla.py        # Batalla vs IA (Canvas + Matplotlib embebido)
-            ├── tutorial.py       # Tutorial guiado
-            ├── guia.py           # Manual de fórmulas (tablas con scroll)
-            └── laboratorio.py    # Laboratorio y Simulador de Disparo
+├── main.py                    # Entry point: única forma de lanzar el juego
+│                              # (relanza con el .venv si el intérprete no tiene deps)
+├── requirements.txt           # Dependencias de runtime
+├── README.md
+├── juego_naval/               # Paquete principal (dominio + lógica + presentación)
+│   ├── app.py                 # Composición: registro central de pantallas + main()
+│   ├── diag.py                # Diagnóstico en consola ([diag], silenciable con BNV_DIAG=0)
+│   ├── dominio/               # ESTRUCTURA del juego: entidades y geometría puras
+│   │   ├── vector2d.py        #   Clase algebraica Vector2D (Espacio vectorial R^2)
+│   │   ├── barco.py           #   Entidad Barco (Geometría discreta paramétrica sobre Z^2)
+│   │   └── tablero.py         #   Plano Cartesiano 2D, colisiones e indexación
+│   ├── logica/                # REGLAS y LÓGICA del juego: pura, sin tkinter
+│   │   ├── habilidades.py     #   Patrón Strategy para las operaciones de combate
+│   │   ├── ia.py              #   Inteligencia Artificial enemiga (Caza y Exploración)
+│   │   ├── sesion.py          #   Sesión de partida: máquina de estados + registro único
+│   │   ├── tutorial.py        #   Contenido puro del Tutorial (3 misiones + evaluación)
+│   │   ├── laboratorio.py     #   Matemática pura y dibujo del Laboratorio
+│   │   └── guia.py            #   Manual: diccionario de vectores y catálogo
+│   └── ui/                    # MOTOR de pantallas / presentación (Tkinter + Matplotlib)
+│       ├── gestor_pantallas.py    # Screen Manager Tkinter (navegación + estado)
+│       ├── pantalla_base.py       # Clase base de toda pantalla (hooks _construir_ui/_limpiar)
+│       └── pantallas/             # menu_principal, batalla, tutorial, guia, laboratorio
+├── tests/                     # Pruebas unitarias (unittest): vector2d, juego,
+│                              # laboratorio, sesion, tutorial
+├── scripts/                   # Tooling de build y empaquetado
+│   ├── build_linux.sh         #   Genera ejecutable para Linux (PyInstaller)
+│   ├── build_windows.bat      #   Genera ejecutable para Windows (PyInstaller)
+│   ├── BatallaNavalVectorial.spec  #   Especificación PyInstaller (onefile + console)
+│   └── requirements-build.txt #   Dependencias del entorno de build (pyinstaller)
+├── dist/                      # (generado por PyInstaller, gitignored)
+├── build/                     # (trabajo interno de PyInstaller, gitignored)
+└── .venv/  .venv-build/       # Entornos virtuales (gitignored)
 ```
 
-**Principio rector:** ningún archivo de la raíz importa `tkinter` ni
-`matplotlib` (salvo a través de las pantallas); toda la matemática vive en
-módulos puros testeados por `unittest`.
+**Principio rector:** la dependencia entre capas es unidireccional y obligatoria
+(`ui → logica → dominio`). Ninguna capa interna importa `tkinter` ni
+`matplotlib` (solo la capa `ui`); toda la matemática y las reglas viven en
+módulos puros testeados por `unittest` desde `tests/`.
 
 ---
 
@@ -284,7 +288,7 @@ $$\vec{r}(t) = \vec{P}_{\text{origen}} + t \cdot \text{proj}_{\vec{u}}(\vec{v}),
 
 El sistema incorpora un motor de depuración que captura el estado algebraico de cada operación antes de modificar el estado del juego:
 
-* **Estructura de retorno:** Todos los métodos de `habilidades.py` y `vector2d.py` devuelven un diccionario `explicacion` con:
+* **Estructura de retorno:** Todos los métodos de `juego_naval/logica/habilidades.py` y `juego_naval/dominio/vector2d.py` devuelven un diccionario `explicacion` con:
   * `operacion`: Nombre formal de la transformación matemática.
   * `formula`: Notación formal en formato algebraico.
   * `pasos`: Lista de cadenas con la sustitución aritmética término a término.
@@ -296,16 +300,20 @@ con prefijo `[diag]`: arranque (intérprete, tkinter, matplotlib), registro de
 pantallas, navegación entre pantallas, creación de partida, turnos y disparos.
 Se silencia con `BNV_DIAG=0`:
 
+```bash
+BNV_DIAG=0 ./.venv/bin/python main.py
+```
+
 ---
 
-### 3.1 Sesión de Partida y Máquina de Estados (`juego_naval/juego/sesion.py`)
+### 3.1 Sesión de Partida y Máquina de Estados (`juego_naval/logica/sesion.py`)
 
 La lógica de una partida completa vive en un solo lugar, sin duplicados entre
 "modo texto" y "modo gráfico" (como ocurría antes de la migración):
 
 * **`EstadoBatalla`:** `TURNO_JUGADOR`, `TURNO_IA`, `VICTORIA`, `DERROTA`.
 * **Registro único de habilidades:** `SKILLS` se deriva de las clases de
-  `habilidades.py`, y de ahí `COSTOS_HABILIDAD` y `NOMBRES_HABILIDAD`; no hay
+  `juego_naval/logica/habilidades.py`, y de ahí `COSTOS_HABILIDAD` y `NOMBRES_HABILIDAD`; no hay
   copias de costos ni nombres en ningún otro módulo.
 * **`ejecutar_habilidad()`:** función pura que despacha la habilidad contra el
   tablero enemigo (sin tocar estado).
@@ -314,7 +322,7 @@ La lógica de una partida completa vive en un solo lugar, sin duplicados entre
   viven **solo** aquí. El estado se guarda en `gestor.compartido["sesion"]`
   para sobrevivir a los cambios de pantalla.
 
-### 3.2 Laboratorio de Vectores (`juego_naval/juego/laboratorio.py`)
+### 3.2 Laboratorio de Vectores (`juego_naval/logica/laboratorio.py`)
 
 La representación gráfica usa una arquitectura estándar en apps científicas de
 Python: **tkinter es la cáscara** (menú, sliders, pestañas) y **Matplotlib vive
@@ -342,9 +350,9 @@ matemática es comprobable con `unittest` sin abrir una ventana.
 ### 3.3 Batalla Naval Gráfica (`juego_naval/ui/pantallas/batalla.py`)
 
 La versión **jugable** de la campaña. Reutiliza exactamente la lógica pura:
-instancia `SesionBatalla` de `juego_naval/juego/sesion.py`, ejecuta las
-habilidades de `habilidades.py` vía `ejecutar_habilidad()` y delega el turno
-enemigo a `IAEnemiga.decidir_turno()`.
+instancia `SesionBatalla` de `juego_naval/logica/sesion.py`, ejecuta las
+habilidades de `juego_naval/logica/habilidades.py` vía `ejecutar_habilidad()` y
+delega el turno enemigo a `IAEnemiga.decidir_turno()`.
 
 Vista y controles:
 
@@ -355,7 +363,7 @@ Vista y controles:
    k del Torpedo. Solo se activan los sliders que la habilidad elegida necesita.
 3. **Predicción en vivo:** un mini-plano Matplotlib embebido dibuja la flecha
    P + V y un recuadro verde/rojo sobre la casilla de impacto (verde = dentro,
-   rojo = fuera), usando las funciones puras de `juego_naval/juego/laboratorio.py`.
+   rojo = fuera), usando las funciones puras de `juego_naval/logica/laboratorio.py`.
 4. **Log pedagógico:** tras cada disparo y cada turno de la IA se muestra el
    desglose matemático paso a paso (mismas cadenas `explicacion`), reforzando
    el aprendizaje de fórmulas.
@@ -379,7 +387,7 @@ pantallas con Matplotlib cierran su figura con `plt.close`).
 
 ---
 
-### 4. Algoritmo de la Inteligencia Artificial (`ia.py`)
+### 4. Algoritmo de la Inteligencia Artificial (`juego_naval/logica/ia.py`)
 
 La IA implementa una máquina de estados finita con lógica vectorial:
 1. **Fase de Exploración (Paridad Cartesiana):** Selecciona casillas con paridad $(x + y) \equiv 0 \pmod 2$ para maximizar la cobertura del plano reduciendo en un $50\%$ las búsquedas ciegas.
@@ -393,22 +401,22 @@ La IA implementa una máquina de estados finita con lógica vectorial:
 ### 5. Cobertura de Pruebas Unitarias (`unittest`)
 
 Se han desarrollado **65 casos de prueba unitarios** que validan:
-* `test_vector2d.py` (9): álgebra lineal (suma, resta, escalar, magnitud,
+* `tests/test_vector2d.py` (9): álgebra lineal (suma, resta, escalar, magnitud,
   distancia, producto punto, proyección, desglose explicativo).
-* `test_juego.py` (7): mecánicas de juego (posicionamiento de barcos, disparos,
+* `tests/test_juego.py` (7): mecánicas de juego (posicionamiento de barcos, disparos,
   agua/impacto/fuera de límite y colisiones, habilidades de combate).
-* `test_laboratorio.py` (16): matemática del Laboratorio (7 operaciones +
+* `tests/test_laboratorio.py` (16): matemática del Laboratorio (7 operaciones +
   opciones registradas + predicción de impacto dentro/fuera).
-* `test_sesion.py` (23): costos y nombres de habilidades, ejecución de cada
+* `tests/test_sesion.py` (23): costos y nombres de habilidades, ejecución de cada
   disparo sobre el tablero (incluido el rechazo de vectores nulos), máquina de
   estados de `SesionBatalla` (energía, tope, victoria/derrota, turno de la IA)
   y smoke test que abre/cierra la PantallaBatalla.
-* `test_tutorial.py` (10): estructura de las 3 misiones y evaluación de
+* `tests/test_tutorial.py` (10): estructura de las 3 misiones y evaluación de
   acierto/error (vectorial y escalar).
 
 Para correr la suite completa:
 ```bash
-python3 -m unittest discover -s . -p "test_*.py"
+./.venv/bin/python -m unittest discover -s tests -p "test_*.py"
 ```
 
 ---

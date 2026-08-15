@@ -1,6 +1,6 @@
 """
 =================================================================================
-MÓDULO: juego_naval/juego/sesion.py - Sesión de partida (máquina de estados)
+MÓDULO: juego_naval/logica/sesion.py - Sesión de partida (máquina de estados)
 =================================================================================
 Fuente ÚNICA de la lógica de una partida de Batalla Naval Vectorial, extraída
 de los duplicados que existían en juego.py (TUI), juego_grafico.py (GUI) y
@@ -25,16 +25,16 @@ import random
 from enum import Enum, auto
 from typing import Any, Dict, Optional, Tuple
 
-from vector2d import Vector2D
-from tablero import Tablero
-from habilidades import (
+from juego_naval.dominio.vector2d import Vector2D
+from juego_naval.dominio.tablero import Tablero
+from juego_naval.logica.habilidades import (
     DisparoBasicoSuma,
     DisparoConViento,
     TorpedoEscalar,
     SonarDistanciaEuclidiana,
     CanonProyeccionOrbital,
 )
-from ia import IAEnemiga
+from juego_naval.logica.ia import IAEnemiga
 
 
 class EstadoBatalla(Enum):

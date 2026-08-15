@@ -16,12 +16,12 @@ from tkinter import ttk, Text, END
 from typing import Any, Dict, List, Optional, Tuple
 
 from juego_naval.ui.pantalla_base import PantallaBase
-from juego_naval.juego.tutorial import (
+from juego_naval.logica.tutorial import (
     MISIONES,
     es_mision_vectorial,
     evaluar_intento_tutorial,
 )
-from vector2d import Vector2D
+from juego_naval.dominio.vector2d import Vector2D
 from juego_naval.diag import diag
 
 COLOR_ORIGEN = "#27ae60"

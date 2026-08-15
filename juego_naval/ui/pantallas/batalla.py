@@ -6,7 +6,7 @@ Migración de `AplicacionBatallaGrafica` (juego_grafico.py) al patrón de
 pantallas de juego_naval/ui.
 
 La lógica de la partida (turnos, energía, viento, victoria/derrota) vive en
-`SesionBatalla` (juego_naval/juego/sesion.py), guardada en
+`SesionBatalla` (juego_naval/logica/sesion.py), guardada en
 `gestor.compartido["sesion"]`. Esta pantalla solo se encarga de:
 
     * Pintar los tableros en tkinter Canvas.
@@ -14,7 +14,7 @@ La lógica de la partida (turnos, energía, viento, victoria/derrota) vive en
     * Construir el vector con sliders y mostrar la predicción en matplotlib.
     * Mostrar el desglose matemático de cada disparo en el log.
 
-Se reutilizan TAL CUAL las funciones puras de juego_naval/juego/laboratorio.py
+Se reutilizan TAL CUAL las funciones puras de juego_naval/logica/laboratorio.py
 (`calcular_preview_disparo`, `dibujar_preview_disparo`) y no se toca ninguna
 regla del juego.
 =================================================================================
@@ -34,11 +34,11 @@ except ImportError:
     _MATPLOTLIB_DISPONIBLE = False
 
 from juego_naval.ui.pantalla_base import PantallaBase
-from juego_naval.juego.sesion import SesionBatalla, EstadoBatalla, COSTOS_HABILIDAD, NOMBRES_HABILIDAD
+from juego_naval.logica.sesion import SesionBatalla, EstadoBatalla, COSTOS_HABILIDAD, NOMBRES_HABILIDAD
 from juego_naval.diag import diag
-from vector2d import Vector2D
-from tablero import Tablero
-from juego_naval.juego.laboratorio import calcular_preview_disparo, dibujar_preview_disparo
+from juego_naval.dominio.vector2d import Vector2D
+from juego_naval.dominio.tablero import Tablero
+from juego_naval.logica.laboratorio import calcular_preview_disparo, dibujar_preview_disparo
 
 CLAVE_SESION = "sesion"
 

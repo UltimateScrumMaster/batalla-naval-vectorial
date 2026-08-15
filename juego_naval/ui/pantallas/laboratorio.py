@@ -35,8 +35,8 @@ except ImportError:
 
 from juego_naval.ui.pantalla_base import PantallaBase
 from juego_naval.diag import diag
-from vector2d import Vector2D
-from juego_naval.juego.laboratorio import (
+from juego_naval.dominio.vector2d import Vector2D
+from juego_naval.logica.laboratorio import (
     OPCIONES_LABORATORIO,
     calcular_resultado_laboratorio,
     dibujar_laboratorio,

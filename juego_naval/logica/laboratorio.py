@@ -1,6 +1,6 @@
 """
 =================================================================================
-MÓDULO: juego_naval/juego/laboratorio.py - Matemática del Laboratorio de Vectores
+MÓDULO: juego_naval/logica/laboratorio.py - Matemática del Laboratorio de Vectores
 =================================================================================
 Funciones puras de cálculo y de dibujo del Laboratorio, extraídas de
 `interfaz_grafica.py` (migración a la arquitectura unificada). No dependen de
@@ -11,7 +11,7 @@ matplotlib que la capa de presentación les pasa.
 
 from typing import Any, Dict
 
-from vector2d import Vector2D
+from juego_naval.dominio.vector2d import Vector2D
 
 # Paleta de colores (modo claro, legible en pizarra digital y proyector)
 COLOR_U = "#1f77b4"        # azul: vector U

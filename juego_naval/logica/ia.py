@@ -14,9 +14,9 @@ ataques. Implementa una estrategia didáctica:
 from __future__ import annotations
 import random
 from typing import List, Tuple, Optional, Dict, Any
-from vector2d import Vector2D
-from tablero import Tablero
-from habilidades import DisparoBasicoSuma, TorpedoEscalar, SonarDistanciaEuclidiana
+from juego_naval.dominio.vector2d import Vector2D
+from juego_naval.dominio.tablero import Tablero
+from juego_naval.logica.habilidades import DisparoBasicoSuma, TorpedoEscalar, SonarDistanciaEuclidiana
 
 
 class IAEnemiga:

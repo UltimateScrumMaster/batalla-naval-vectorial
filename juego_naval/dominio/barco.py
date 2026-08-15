@@ -11,7 +11,7 @@ Esto refuerza el concepto de ecuaciones paramétricas de una recta discreta.
 
 from __future__ import annotations
 from typing import List, Set, Tuple
-from vector2d import Vector2D
+from juego_naval.dominio.vector2d import Vector2D
 
 
 class Barco:
