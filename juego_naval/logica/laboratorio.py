@@ -295,4 +295,6 @@ def dibujar_preview_disparo(ax, preview: Dict[str, Any]) -> None:
                 textcoords="offset points", xytext=(8, -12),
                 color=color_impacto, fontweight="bold")
 
-    ax.legend(loc="upper right", fontsize=9)
+    ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.08),
+              ncol=4, fontsize=9, columnspacing=1.5)
+    ax.figure.tight_layout()
