@@ -313,8 +313,15 @@ def _limite_y_seguro(ax) -> float:
     return ymin + 0.4
 
 
-def dibujar_preview_disparo(ax, preview: Dict[str, Any]) -> None:
-    """Dibuja la grilla del tablero y la flecha del disparo previsto."""
+def dibujar_preview_disparo(ax, preview: Dict[str, Any],
+                            mostrar_leyenda: bool = True) -> None:
+    """Dibuja la grilla del tablero y la flecha del disparo previsto.
+
+    La leyenda (referencias de colores) va compacta dentro del gráfico, arriba
+    a la izquierda, y se puede ocultar pasando `mostrar_leyenda=False` (por
+    ejemplo con un toggle en la pantalla). No reserva espacio inferior ni llama
+    a tight_layout, así el plano ocupa toda la figura.
+    """
     ancho = preview["ancho"]
     alto = preview["alto"]
     origen = preview["origen"]
@@ -328,11 +335,6 @@ def dibujar_preview_disparo(ax, preview: Dict[str, Any]) -> None:
     ax.set_xlim(-1, ancho)
     ax.set_ylim(-1, alto)
 
-    _proxy_leyenda(ax, COLOR_U, "Origen (barco P)")
-    _proxy_leyenda(ax, COLOR_V, "Vector de disparo V")
-    _proxy_leyenda(ax, COLOR_RESULTADO, "Impacto dentro")
-    _proxy_leyenda(ax, COLOR_SOMBRA, "Impacto fuera")
-
     ax.plot(origen.x, origen.y, marker="o", markersize=10, color=COLOR_U, zorder=4)
     ax.annotate(f"P{origen}", (origen.x, origen.y), textcoords="offset points",
                 xytext=(-2, 8), color=COLOR_U, fontweight="bold")
@@ -345,9 +347,12 @@ def dibujar_preview_disparo(ax, preview: Dict[str, Any]) -> None:
                 textcoords="offset points", xytext=(8, -12),
                 color=color_impacto, fontweight="bold")
 
-    # Leyenda de colores debajo del gráfico (2 columnas para que entre también
-    # en la figura chica de la Batalla). Se reserva margen inferior con
-    # subplots_adjust: el tight_layout no alcanza en figuras pequeñas.
-    ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.06),
-              ncol=2, fontsize=9, columnspacing=1.0)
-    ax.figure.subplots_adjust(bottom=0.22)
+    # Referencias compactas dentro del gráfico (solo las útiles: el impacto
+    # muestra su estado real, dentro o fuera, no ambos).
+    if mostrar_leyenda:
+        _proxy_leyenda(ax, COLOR_U, "Origen (barco P)")
+        _proxy_leyenda(ax, COLOR_V, "Vector de disparo V")
+        _proxy_leyenda(ax, color_impacto,
+                       "Impacto dentro" if preview["dentro"] else "Impacto fuera")
+        ax.legend(loc="upper left", fontsize=8, framealpha=0.9,
+                  title="Referencias", title_fontsize=9)

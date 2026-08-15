@@ -124,7 +124,12 @@ class PantallaBatalla(PantallaBase):
 
         ttk.Label(col_derecha, text="PREDICCIÓN DEL VECTOR (P + V)",
                   font=("Segoe UI", 10, "bold")).pack()
-        self.figura_plano = Figure(figsize=(3.3, 3.3), dpi=100)
+        self.var_mostrar_refs = tk.BooleanVar(value=False)
+        ttk.Checkbutton(
+            col_derecha, text="Mostrar referencias de colores",
+            variable=self.var_mostrar_refs,
+            command=self._actualizar_preview).pack(anchor="w")
+        self.figura_plano = Figure(figsize=(4.5, 4.2), dpi=100)
         self.ax_plano = self.figura_plano.add_subplot(111)
         self.canvas_plano = FigureCanvasTkAgg(self.figura_plano, master=col_derecha)
         self.canvas_plano.get_tk_widget().pack(fill="both", expand=True)
@@ -349,7 +354,8 @@ class PantallaBatalla(PantallaBase):
             vector = a
 
         preview = calcular_preview_disparo(self.origen_seleccionado, vector)
-        dibujar_preview_disparo(self.ax_plano, preview)
+        dibujar_preview_disparo(self.ax_plano, preview,
+                                mostrar_leyenda=self.var_mostrar_refs.get())
         self.canvas_plano.draw_idle()
         self._marcar_destino_enemigo(preview)
 

@@ -364,6 +364,9 @@ Vista y controles:
 3. **Predicción en vivo:** un mini-plano Matplotlib embebido dibuja la flecha
    P + V y un recuadro verde/rojo sobre la casilla de impacto (verde = dentro,
    rojo = fuera), usando las funciones puras de `juego_naval/logica/laboratorio.py`.
+   Las referencias de colores se pueden mostrar/ocultar con el toggle
+   **"Mostrar referencias de colores"** (leyenda compacta dentro del plano,
+   arriba a la izquierda, con solo las entradas útiles).
 4. **Límites del mapa:** los sliders del vector **se bloquean** en el límite
    permitido (0..9): si el disparo quedaría fuera, la componente que desborda se
    recorta automáticamente conservando el sentido (p. ej. desde (2,6) un vector
