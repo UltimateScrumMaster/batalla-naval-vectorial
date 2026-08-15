@@ -9,7 +9,7 @@ matplotlib que la capa de presentación les pasa.
 =================================================================================
 """
 
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 from juego_naval.dominio.vector2d import Vector2D
 
@@ -140,6 +140,56 @@ def calcular_preview_disparo(origen: Vector2D, vector: Vector2D,
     dentro = (0 <= destino.x < ancho) and (0 <= destino.y < alto)
     return {"origen": origen, "vector": vector, "destino": destino,
             "dentro": dentro, "ancho": ancho, "alto": alto}
+
+
+def limitar_impacto(origen: Vector2D, vector: Vector2D,
+                    ancho: int = 10, alto: int = 10,
+                    k: int = 1, viento: Optional[Vector2D] = None) -> Vector2D:
+    """Recorta `vector` para que el impacto (origen + k·vector + viento) quede
+    dentro de [0, ancho-1] × [0, alto-1].
+
+    El recorte es por eje y mantiene el sentido de cada componente: solo se
+    acortan las componentes que desbordan, hasta el valor máximo permitido
+    (por eso 0 siempre queda dentro del rango y nunca se invierte el signo).
+    Útil para bloquear los sliders y para reencuadrar el vector al cambiar de
+    buque emisor, conservando lo más posible la dirección original.
+
+    Args:
+        origen: Posición del barco emisor (P).
+        vector: Vector de disparo a recortar (V o dirección base U).
+        ancho, alto: Dimensiones del mapa (índices 0..ancho-1, 0..alto-1).
+        k: Escalar del Torpedo (impacto = origen + k·vector). Con k <= 0 no
+            hay desplazamiento, así que el vector no se toca.
+        viento: Vector de viento (solo lo usa la habilidad Artillería con Viento).
+
+    Returns:
+        Vector recortado dentro del mapa.
+    """
+    if k <= 0:
+        return vector
+    ox = origen.x + (viento.x if viento is not None else 0)
+    oy = origen.y + (viento.y if viento is not None else 0)
+    minx, maxx = -(ox // k), (ancho - 1 - ox) // k
+    miny, maxy = -(oy // k), (alto - 1 - oy) // k
+    return Vector2D(max(minx, min(maxx, vector.x)),
+                    max(miny, min(maxy, vector.y)))
+
+
+def limite_escalar(origen: Vector2D, vector: Vector2D,
+                   ancho: int = 10, alto: int = 10, tope: int = 5) -> int:
+    """Máximo `k` (escalar del Torpedo) tal que origen + k·vector quede dentro
+    del mapa [0, ancho-1] × [0, alto-1]. Nunca supera `tope`."""
+    ox, oy = origen.x, origen.y
+    k = tope
+    if vector.x > 0:
+        k = min(k, (ancho - 1 - ox) // vector.x)
+    elif vector.x < 0:
+        k = min(k, ox // (-vector.x))
+    if vector.y > 0:
+        k = min(k, (alto - 1 - oy) // vector.y)
+    elif vector.y < 0:
+        k = min(k, oy // (-vector.y))
+    return max(k, 0)
 
 
 # =============================================================================
@@ -295,6 +345,9 @@ def dibujar_preview_disparo(ax, preview: Dict[str, Any]) -> None:
                 textcoords="offset points", xytext=(8, -12),
                 color=color_impacto, fontweight="bold")
 
-    ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.08),
-              ncol=4, fontsize=9, columnspacing=1.5)
-    ax.figure.tight_layout()
+    # Leyenda de colores debajo del gráfico (2 columnas para que entre también
+    # en la figura chica de la Batalla). Se reserva margen inferior con
+    # subplots_adjust: el tight_layout no alcanza en figuras pequeñas.
+    ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.06),
+              ncol=2, fontsize=9, columnspacing=1.0)
+    ax.figure.subplots_adjust(bottom=0.22)

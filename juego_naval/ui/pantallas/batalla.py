@@ -38,7 +38,12 @@ from juego_naval.logica.sesion import SesionBatalla, EstadoBatalla, COSTOS_HABIL
 from juego_naval.diag import diag
 from juego_naval.dominio.vector2d import Vector2D
 from juego_naval.dominio.tablero import Tablero
-from juego_naval.logica.laboratorio import calcular_preview_disparo, dibujar_preview_disparo
+from juego_naval.logica.laboratorio import (
+    calcular_preview_disparo,
+    dibujar_preview_disparo,
+    limitar_impacto,
+    limite_escalar,
+)
 
 CLAVE_SESION = "sesion"
 
@@ -288,9 +293,15 @@ class PantallaBatalla(PantallaBase):
         barco = self._barco_en_celda(x, y)
         if barco is not None and not barco.esta_hundido():
             self.origen_seleccionado = barco.origen
+            antes = (self.var_vax.get(), self.var_vay.get(), self.var_k.get())
             self._estado(f"Barco emisor seleccionado: {barco.nombre} en {barco.origen}")
             self._redibujar_todo()
             self._actualizar_preview()
+            despues = (self.var_vax.get(), self.var_vay.get(), self.var_k.get())
+            if antes != despues:
+                diag(f"limite: vector reencuadrado al seleccionar {barco.nombre} "
+                     f"en {barco.origen}: (a={antes[0]},{antes[1]}, k={antes[2]}) -> "
+                     f"(a={despues[0]},{despues[1]}, k={despues[2]})")
 
     # ----------------------------------------------------- ejecución ---------
     def _vector_efectivo(self) -> Tuple[Vector2D, Vector2D]:
@@ -298,9 +309,36 @@ class PantallaBatalla(PantallaBase):
         b = Vector2D(self.var_vbx.get(), self.var_vby.get())
         return a, b
 
+    def _bloquear_sliders_dentro_del_mapa(self) -> None:
+        """Recorta los sliders para que el disparo nunca salga del mapa.
+
+        Cada vez que se mueve un slider (o cambia el buque emisor / la habilidad
+        / el viento), el vector se reencuadra dentro de [0, ANCHO-1]×[0, ALTO-1]
+        recortando por eje (se acortan solo las componentes que desbordan, se
+        conserva el sentido). El slider queda "bloqueado" en el último valor
+        permitido.
+        """
+        if self.origen_seleccionado is None or self.sesion is None:
+            return
+        clave = self.habilidad_activa
+        k = self.var_k.get() if clave == "torpedo" else 1
+        viento = self.sesion.viento if clave == "viento" else None
+
+        a = Vector2D(self.var_vax.get(), self.var_vay.get())
+        a_recortado = limitar_impacto(
+            self.origen_seleccionado, a, self.ANCHO, self.ALTO, k, viento)
+        self.var_vax.set(a_recortado.x)
+        self.var_vay.set(a_recortado.y)
+
+        if clave == "torpedo":
+            k_max = limite_escalar(self.origen_seleccionado, a_recortado,
+                                   self.ANCHO, self.ALTO, tope=5)
+            self.var_k.set(min(self.var_k.get(), k_max))
+
     def _actualizar_preview(self) -> None:
         if self.origen_seleccionado is None or self.sesion is None:
             return
+        self._bloquear_sliders_dentro_del_mapa()
         a, _b = self._vector_efectivo()
         clave = self.habilidad_activa
         if clave == "viento":

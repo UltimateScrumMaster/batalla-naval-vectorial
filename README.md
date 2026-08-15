@@ -364,10 +364,18 @@ Vista y controles:
 3. **Predicción en vivo:** un mini-plano Matplotlib embebido dibuja la flecha
    P + V y un recuadro verde/rojo sobre la casilla de impacto (verde = dentro,
    rojo = fuera), usando las funciones puras de `juego_naval/logica/laboratorio.py`.
-4. **Log pedagógico:** tras cada disparo y cada turno de la IA se muestra el
+4. **Límites del mapa:** los sliders del vector **se bloquean** en el límite
+   permitido (0..9): si el disparo quedaría fuera, la componente que desborda se
+   recorta automáticamente conservando el sentido (p. ej. desde (2,6) un vector
+   (3,4) queda en (3,3) para impactar en (5,9)). Al **cambiar de buque emisor**,
+   el vector se reencuadra igual hacia el eje más cercano (desde (8,9), un
+   (3,4) pasa a (1,0) y el impacto cae en (9,9)). La lógica de recorte vive en
+   `limitar_impacto`/`limite_escalar` de `juego_naval/logica/laboratorio.py`
+   (probada con unittest), así un disparo nunca sale del tablero.
+5. **Log pedagógico:** tras cada disparo y cada turno de la IA se muestra el
    desglose matemático paso a paso (mismas cadenas `explicacion`), reforzando
    el aprendizaje de fórmulas.
-5. **Energía y viento:** la barra superior muestra la energía táctica (regla de
+6. **Energía y viento:** la barra superior muestra la energía táctica (regla de
    recarga `min(6, energía+1)` y viento aleatorio cada 3 turnos).
 
 ### 3.4 Gestor de Pantallas (`juego_naval/ui/gestor_pantallas.py`)
