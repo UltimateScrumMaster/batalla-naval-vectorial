@@ -8,7 +8,10 @@ Migrado desde test_juego_grafico.py.
 =================================================================================
 """
 
+import os
 import unittest
+
+os.environ["BNV_DIAG"] = "0"
 
 from vector2d import Vector2D
 from tablero import Tablero

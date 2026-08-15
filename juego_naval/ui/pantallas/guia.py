@@ -13,6 +13,7 @@ import tkinter as tk
 from tkinter import ttk
 
 from juego_naval.ui.pantalla_base import PantallaBase
+from juego_naval.diag import diag
 from juego_naval.juego.guia import (
     DICCIONARIO_VECTORES,
     CATALOGO_HABILIDADES,
@@ -25,6 +26,8 @@ class PantallaGuia(PantallaBase):
     """Manual de fórmulas y habilidades vectoriales."""
 
     def _construir_ui(self) -> None:
+        diag(f"guia: manual abierto ({len(DICCIONARIO_VECTORES)} entradas de diccionario, "
+             f"{len(CATALOGO_HABILIDADES)} habilidades)")
         barra = ttk.Frame(self)
         barra.pack(fill="x", padx=8, pady=6)
         ttk.Label(barra, text="MANUAL DE FÓRMULAS Y HABILIDADES",

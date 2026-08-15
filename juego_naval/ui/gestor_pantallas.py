@@ -16,6 +16,8 @@ from __future__ import annotations
 
 import tkinter as tk
 
+from juego_naval.diag import diag
+
 
 class GestorPantallas:
     """Controla qué pantalla es visible sobre la ventana raíz."""
@@ -39,6 +41,7 @@ class GestorPantallas:
         """Navega a otra pantalla guardando la actual en el historial."""
         if nombre not in self._registro:
             raise KeyError(f"Pantalla no registrada: {nombre}")
+        diag(f"ir -> {nombre}")
         if self._actual is not None:
             self._pila.append(self._actual_nombre)
             self._actual.destroy()
@@ -49,6 +52,7 @@ class GestorPantallas:
         """Navega a otra pantalla sin guardar la actual (ej: fin de partida)."""
         if nombre not in self._registro:
             raise KeyError(f"Pantalla no registrada: {nombre}")
+        diag(f"reemplazar -> {nombre}")
         if self._actual is not None:
             self._actual.destroy()
         self._pila.clear()
@@ -60,6 +64,7 @@ class GestorPantallas:
         if not self._pila:
             return
         anterior = self._pila.pop()
+        diag(f"volver -> {anterior}")
         if self._actual is not None:
             self._actual.destroy()
         self._actual = self._crear(anterior, kwargs)

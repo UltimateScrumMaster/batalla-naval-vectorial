@@ -24,10 +24,16 @@ presentan.
   pip install -r requirements.txt
   ```
 
+> Se recomienda usar un **entorno virtual** (`.venv`). El juego incluye en
+> `main.py` un relanzamiento automático: si lo lanzas con un intérprete que no
+> tenga las dependencias (p. ej. el `python3` del sistema sin matplotlib) pero
+> el `.venv` del proyecto sí las tiene, se relanza solo con el venv.
+
 ### 2. Ejecutar el Juego
 ```bash
-python3 main.py
+./.venv/bin/python main.py
 ```
+(o simplemente `python3 main.py`: se relanzará con el `.venv` si es necesario).
 
 El menú principal ofrece cuatro pantallas:
 1. **Batalla vs IA:** campaña por turnos contra el *Almirante Vector* (energía,
@@ -284,6 +290,11 @@ El sistema incorpora un motor de depuración que captura el estado algebraico de
   * `pasos`: Lista de cadenas con la sustitución aritmética término a término.
   * `resultado`: Vector o escalar resultante.
 * **Visualización:** la pantalla de Batalla muestra un **log pedagógico** con el desglose paso a paso tras cada disparo y cada turno de la IA, con código de colores según el autor (**JUGADOR** o **IA**), permitiendo la verificación pedagógica instantánea en el aula.
+
+Además, si se lanza desde una terminal, la app imprime **diagnóstico en vivo**
+con prefijo `[diag]`: arranque (intérprete, tkinter, matplotlib), registro de
+pantallas, navegación entre pantallas, creación de partida, turnos y disparos.
+Se silencia con `BNV_DIAG=0`:
 
 ---
 

@@ -34,6 +34,7 @@ except ImportError:
     _MATPLOTLIB_DISPONIBLE = False
 
 from juego_naval.ui.pantalla_base import PantallaBase
+from juego_naval.diag import diag
 from vector2d import Vector2D
 from juego_naval.juego.laboratorio import (
     OPCIONES_LABORATORIO,
@@ -77,16 +78,21 @@ class PantallaLaboratorio(PantallaBase):
         self._cuaderno.pack(fill="both", expand=True)
         self._pestana_laboratorio()
         self._pestana_preview()
+        diag("laboratorio: UI lista (2 pestanas: vectores y simulador P+V)")
 
     def _pantalla_sin_matplotlib(self) -> None:
         """Fallback: si falta matplotlib, muestra instrucciones en vez de crashear."""
+        diag("laboratorio: matplotlib NO disponible, modo fallback")
         marco = ttk.Frame(self)
         marco.pack(fill="both", expand=True, padx=30, pady=30)
         ttk.Label(marco, text="Matplotlib no está instalado",
                   font=("Segoe UI", 16, "bold"), foreground="#c0392b").pack(pady=10)
         ttk.Label(marco, text=(
             "El Laboratorio de Vectores necesita matplotlib.\n\n"
-            "Instálalo con:\n    pip install matplotlib\n\n"
+            "Instálalo con:\n"
+            "    .venv/bin/pip install matplotlib\n\n"
+            "Y lanza el juego con el entorno virtual del proyecto:\n"
+            "    .venv/bin/python main.py\n\n"
             "Puedes volver al menú mientras tanto."),
             justify="center", font=("Segoe UI", 11)).pack(pady=6)
         ttk.Button(marco, text="Volver al menú", command=self.volver).pack(pady=10)

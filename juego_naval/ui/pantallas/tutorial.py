@@ -22,6 +22,7 @@ from juego_naval.juego.tutorial import (
     evaluar_intento_tutorial,
 )
 from vector2d import Vector2D
+from juego_naval.diag import diag
 
 COLOR_ORIGEN = "#27ae60"
 COLOR_OBJETIVO = "#c0392b"
@@ -133,6 +134,8 @@ class PantallaTutorial(PantallaBase):
         self._intentos = 0
         self._completada = False
         m = self._mision
+        diag(f"tutorial: mision {self._indice_mision + 1}/3 cargada | tipo "
+             f"{'vectorial' if es_mision_vectorial(m) else 'escalar'}")
 
         self.var_titulo.set(f"TUTORIAL GUIADO — MISIÓN {self._indice_mision + 1} de {len(MISIONES)}")
         self.var_mision.set(m["titulo"])
@@ -170,6 +173,7 @@ class PantallaTutorial(PantallaBase):
 
     def _mostrar_fin(self) -> None:
         self._completada = True
+        diag("tutorial: completado (3/3 misiones)")
         self.var_titulo.set("TUTORIAL GUIADO — COMPLETADO")
         self.var_mision.set("¡FELICITACIONES!")
         self.var_historia.set("Has completado el entrenamiento básico de álgebra vectorial naval. "
@@ -200,6 +204,8 @@ class PantallaTutorial(PantallaBase):
             respuesta = self.var_respuesta_k.get()
 
         acierto, mensaje = evaluar_intento_tutorial(m, respuesta)
+        diag(f"tutorial: intento {self._intentos}/3 -> {'ACIERTO' if acierto else 'fallo'} "
+             f"(respuesta {respuesta})")
         self.var_retro.set(mensaje)
         self.etiqueta_retro.config(foreground=COLOR_SOLUCION if acierto else COLOR_ERROR)
 

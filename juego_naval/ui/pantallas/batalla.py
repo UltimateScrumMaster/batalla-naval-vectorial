@@ -35,6 +35,7 @@ except ImportError:
 
 from juego_naval.ui.pantalla_base import PantallaBase
 from juego_naval.juego.sesion import SesionBatalla, EstadoBatalla, COSTOS_HABILIDAD, NOMBRES_HABILIDAD
+from juego_naval.diag import diag
 from vector2d import Vector2D
 from tablero import Tablero
 from juego_naval.juego.laboratorio import calcular_preview_disparo, dibujar_preview_disparo
@@ -202,13 +203,17 @@ class PantallaBatalla(PantallaBase):
 
     def _pantalla_sin_matplotlib(self) -> None:
         """Fallback: si falta matplotlib, muestra instrucciones en vez de crashear."""
+        diag("batalla: matplotlib NO disponible, modo fallback")
         marco = ttk.Frame(self)
         marco.pack(fill="both", expand=True, padx=30, pady=30)
         ttk.Label(marco, text="Matplotlib no está instalado",
                   font=("Segoe UI", 16, "bold"), foreground="#c0392b").pack(pady=10)
         ttk.Label(marco, text=(
             "La Batalla Naval necesita matplotlib para el plano de predicción.\n\n"
-            "Instálalo con:\n    pip install matplotlib\n\n"
+            "Instálalo con:\n"
+            "    .venv/bin/pip install matplotlib\n\n"
+            "Y lanza el juego con el entorno virtual del proyecto:\n"
+            "    .venv/bin/python main.py\n\n"
             "Puedes volver al menú mientras tanto."),
             justify="center", font=("Segoe UI", 11)).pack(pady=6)
         ttk.Button(marco, text="Volver al menú", command=self.volver).pack(pady=10)
@@ -217,6 +222,8 @@ class PantallaBatalla(PantallaBase):
         """Crea la sesión de partida y la guarda en gestor.compartido."""
         self.sesion = SesionBatalla()
         self.gestor.compartido[CLAVE_SESION] = self.sesion
+        diag(f"sesion de batalla creada (flota propia: {len(self.sesion.tablero_jugador.barcos)} barcos, "
+             f"enemiga: {len(self.sesion.tablero_enemigo.barcos)})")
 
     def _crear_slider(self, padre, nombre, variable, desde, hasta) -> None:
         slider = tk.Scale(
@@ -228,6 +235,8 @@ class PantallaBatalla(PantallaBase):
     # --------------------------------------------------------- turnos ---------
     def _empezar_turno_jugador(self) -> None:
         self.sesion.comenzar_turno_jugador()
+        diag(f"turno {self.sesion.turno} del jugador | energia {self.sesion.energia_jugador}/6 | "
+             f"viento {self.sesion.viento}")
 
         self._en_turno_ia = False
         self._elegir_origen_predeterminado()
@@ -332,6 +341,8 @@ class PantallaBatalla(PantallaBase):
 
         self._limpiar_log()
         self._log(f"=== {NOMBRES_HABILIDAD[clave]} ===", "bold")
+        diag(f"disparo [{clave}] desde {self.origen_seleccionado} con {a} (k={self.var_k.get()}) | "
+             f"energia -> {self.sesion.energia_jugador}/6")
 
         if clave == "sonar":
             self._log(resultado["mensaje"])
@@ -349,6 +360,7 @@ class PantallaBatalla(PantallaBase):
         self._redibujar_todo()
 
         if self.sesion.estado == EstadoBatalla.VICTORIA:
+            diag("VICTORIA: flota enemiga hundida")
             self._mensaje("VICTORIA: destruiste toda la flota enemiga con precisión vectorial.")
             self._deshabilitar_controles()
             messagebox.showinfo("Victoria",
@@ -366,6 +378,8 @@ class PantallaBatalla(PantallaBase):
 
     def _ejecutar_turno_ia(self) -> None:
         res = self.sesion.ejecutar_turno_ia()
+        diag(f"turno IA: {len(res.get('resultado_tablero', []))} disparo(s) a tu flota | "
+             f"turno -> {self.sesion.turno}")
 
         self._log("=== TURNO DE LA IA (Almirante Vector) ===")
         for r in res.get("resultado_tablero", []):
@@ -377,6 +391,7 @@ class PantallaBatalla(PantallaBase):
         self._redibujar_todo()
 
         if self.sesion.estado == EstadoBatalla.DERROTA:
+            diag("DERROTA: tu flota fue eliminada")
             self._mensaje("DERROTA: la IA eliminó tu flota.")
             messagebox.showinfo("Derrota", "Tu flota fue eliminada por la artillería enemiga.")
             return
@@ -389,6 +404,7 @@ class PantallaBatalla(PantallaBase):
         self._empezar_turno_jugador()
 
     def _nueva_partida(self) -> None:
+        diag("nueva partida solicitada")
         self._inicializar_sesion()
         self._limpiar_log()
         self._empezar_turno_jugador()
