@@ -30,12 +30,25 @@ abrir ventanas; las pantallas solo la presentan.
 > el `.venv` del proyecto sí las tiene, se relanza solo con el venv.
 
 ### 2. Ejecutar el Juego
+
+El proyecto soporta **dos modos de ejecución**:
+
+#### A. Interfaz Clásica de Escritorio (Tkinter + Matplotlib)
 ```bash
 ./.venv/bin/python main.py
 ```
 (o simplemente `python3 main.py`: se relanzará con el `.venv` si es necesario).
 
-El menú principal ofrece cuatro pantallas:
+#### B. Arquitectura Híbrida / Videojuego Moderno (Godot 4 + Servidor Python WebSockets)
+1. **Iniciar el Servidor de Cálculo Táctico (Python):**
+   ```bash
+   ./.venv/bin/python main_server.py
+   ```
+2. **Abrir el Cliente Gráfico:**
+   * Abrir **Godot 4 .NET** e importar la carpeta `cliente_godot/`.
+   * Presionar **Play (F5)** para acceder al Menú Principal con selección de Comandante, Temas (*Cyber-Navy*, *Fósforo Verde*, *Ámbar*), animaciones fluidas y combate interactivo.
+
+El menú principal ofrece:
 1. **Batalla vs IA:** campaña por turnos contra el *Almirante Vector* (energía,
    viento, 5 habilidades vectoriales, victoria/derrota).
 2. **Tutorial:** 3 misiones didácticas con historia, pistas y desglose
@@ -50,7 +63,7 @@ El menú principal ofrece cuatro pantallas:
 > lo necesitan muestran las instrucciones de instalación y permiten volver al
 > menú.
 
-### 3. Ejecutar las Pruebas Unitarias Automatizadas
+### 3. Ejecutar las Pruebas Unitarias Automatizadas (85 Tests)
 ```bash
 ./.venv/bin/python -m unittest discover -s tests -p "test_*.py"
 ```
@@ -220,13 +233,16 @@ El proyecto está diseñado bajo principios de **Separación de Responsabilidade
 
 ```
 proyecto_vector/
-├── main.py                    # Entry point: única forma de lanzar el juego
-│                              # (relanza con el .venv si el intérprete no tiene deps)
-├── requirements.txt           # Dependencias de runtime
+├── main.py                    # Entry point interfaz clásica Tkinter + Matplotlib
+├── main_server.py             # Entry point del servidor WebSocket asíncrono
+├── requirements.txt           # Dependencias de runtime (matplotlib, pillow, websockets)
 ├── README.md
-├── juego_naval/               # Paquete principal (dominio + lógica + presentación)
+├── juego_naval/               # Paquete principal (dominio + lógica + servidor + UI)
 │   ├── app.py                 # Composición: registro central de pantallas + main()
 │   ├── diag.py                # Diagnóstico en consola ([diag], silenciable con BNV_DIAG=0)
+│   ├── servidor/              # SERVIDOR ASÍNCRONO WEBSOCKET:
+│   │   ├── __init__.py
+│   │   └── ws_server.py       #   Servidor WebSocket (asyncio + websockets + JSON-RPC)
 │   ├── dominio/               # ESTRUCTURA del juego: entidades y geometría puras
 │   │   ├── vector2d.py        #   Clase algebraica Vector2D (Espacio vectorial R^2)
 │   │   ├── barco.py           #   Entidad Barco (Geometría discreta paramétrica sobre Z^2)
@@ -242,9 +258,14 @@ proyecto_vector/
 │       ├── gestor_pantallas.py    # Screen Manager Tkinter (navegación + estado)
 │       ├── pantalla_base.py       # Clase base de toda pantalla (hooks _construir_ui/_limpiar)
 │       └── pantallas/             # menu_principal, batalla, tutorial, guia, laboratorio
-├── tests/                     # Pruebas unitarias (unittest): vector2d, juego,
-│                              # laboratorio, sesion, tutorial
-├── scripts/                   # Tooling de build y empaquetado
+├── cliente_godot/             # CLIENTE GODOT 4 .NET (C#) - INTERFAZ TÁCTICA MODERNA
+│   ├── project.godot          #   Configuración del proyecto Godot 4
+│   ├── BatallaNavalVectorial.csproj # Proyecto C# .NET 8
+│   ├── Scenes/                #   Escenas (MainMenu.tscn, Battle.tscn)
+│   └── Scripts/               #   Scripts C# (GameSettings, Network, Protocol DTOs, UI)
+├── tests/                     # Pruebas unitarias (85 tests): vector2d, juego,
+│                              # laboratorio, sesion, tutorial, servidor
+├── scripts/                   # Tooling de build y empaquetado PyInstaller
 │   ├── build_linux.sh         #   Genera ejecutable para Linux (PyInstaller)
 │   ├── build_windows.bat      #   Genera ejecutable para Windows (PyInstaller)
 │   ├── BatallaNavalVectorial.spec  #   Especificación PyInstaller (onefile + console)
@@ -411,7 +432,7 @@ La IA implementa una máquina de estados finita con lógica vectorial:
 
 ### 5. Cobertura de Pruebas Unitarias (`unittest`)
 
-Se han desarrollado **65 casos de prueba unitarios** que validan:
+Se han desarrollado **85 casos de prueba unitarios** que validan:
 * `tests/test_vector2d.py` (9): álgebra lineal (suma, resta, escalar, magnitud,
   distancia, producto punto, proyección, desglose explicativo).
 * `tests/test_juego.py` (7): mecánicas de juego (posicionamiento de barcos, disparos,
@@ -424,6 +445,10 @@ Se han desarrollado **65 casos de prueba unitarios** que validan:
   y smoke test que abre/cierra la PantallaBatalla.
 * `tests/test_tutorial.py` (10): estructura de las 3 misiones y evaluación de
   acierto/error (vectorial y escalar).
+* `tests/test_servidor.py` (20): comunicación asíncrona WebSocket, ciclo de vida
+  de sesiones (`START_GAME`), previsualizaciones (`GET_PREVIEW` simple y orbital),
+  resolución de turnos (`FIRE_SKILL`), serialización JSON recursiva (`BNVJsonEncoder`)
+  y calculadora de laboratorio (`CALC_LAB`).
 
 Para correr la suite completa:
 ```bash

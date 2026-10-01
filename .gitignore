@@ -5,3 +5,10 @@ __pycache__/
 build/
 dist/
 backups/
+
+# Godot & .NET / C#
+.godot/
+.mono/
+*.csproj.old
+*.tmp
+*.uid

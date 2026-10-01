@@ -4,3 +4,4 @@
 # backend TkAgg de tkinter).
 matplotlib>=3.8
 pillow>=10.0
+websockets>=12.0
