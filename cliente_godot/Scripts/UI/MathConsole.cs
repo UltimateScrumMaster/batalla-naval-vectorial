@@ -39,17 +39,17 @@ namespace BatallaNavalVectorial.UI
 
 		public void AppendSuccess(string text)
 		{
-			_logLabel.AppendText($"[b][color=#52b788]✔ {text}[/color][/b]\n");
+			_logLabel.AppendText($"[b][color=#52b788][OK] {text}[/color][/b]\n");
 		}
 
 		public void AppendWarning(string text)
 		{
-			_logLabel.AppendText($"[b][color=#ffb703]⚠ {text}[/color][/b]\n");
+			_logLabel.AppendText($"[b][color=#ffb703][ALERTA] {text}[/color][/b]\n");
 		}
 
 		public void AppendError(string text)
 		{
-			_logLabel.AppendText($"[b][color=#e63946]✖ {text}[/color][/b]\n");
+			_logLabel.AppendText($"[b][color=#e63946][ERROR] {text}[/color][/b]\n");
 		}
 
 		public void AppendMathBreakdown(string author, string skillName, string formula, List<string> steps)

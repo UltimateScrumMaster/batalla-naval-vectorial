@@ -91,8 +91,8 @@ namespace BatallaNavalVectorial.UI
 
 			_lblStatus = new Label { Text = "ESTADO: INICIANDO...", CustomMinimumSize = new Vector2(160, 30) };
 			_lblTurn = new Label { Text = "TURNO: 1", CustomMinimumSize = new Vector2(90, 30) };
-			_lblEnergy = new Label { Text = "ENERGÍA: 2/6 ⚡", CustomMinimumSize = new Vector2(130, 30) };
-			_lblWind = new Label { Text = "VIENTO: (0, 0) 💨", CustomMinimumSize = new Vector2(130, 30) };
+			_lblEnergy = new Label { Text = "ENERGIA: 2/6 E", CustomMinimumSize = new Vector2(130, 30) };
+			_lblWind = new Label { Text = "VIENTO: (0, 0)", CustomMinimumSize = new Vector2(130, 30) };
 
 			topBar.AddChild(_lblStatus);
 			topBar.AddChild(_lblTurn);
@@ -140,11 +140,11 @@ namespace BatallaNavalVectorial.UI
 			// Selector de Habilidad
 			controlColumn.AddChild(new Label { Text = "2. Habilidad Táctica / Operación Vectorial:" });
 			_optSkills = new OptionButton();
-			_optSkills.AddItem("1. Disparo Simple (P + V) [0 ⚡]", 0);
-			_optSkills.AddItem("2. Artillería con Viento (P + V + W) [1 ⚡]", 1);
-			_optSkills.AddItem("3. Torpedo Escalar (P + k·U) [2 ⚡]", 2);
-			_optSkills.AddItem("4. Sónar de Gauss (Pitágoras) [1 ⚡]", 3);
-			_optSkills.AddItem("5. Cañón Orbital (proj_U(V)) [4 ⚡]", 4);
+			_optSkills.AddItem("1. Disparo Simple (P + V) [0 E]", 0);
+			_optSkills.AddItem("2. Artillería con Viento (P + V + W) [1 E]", 1);
+			_optSkills.AddItem("3. Torpedo Escalar (P + k·U) [2 E]", 2);
+			_optSkills.AddItem("4. Sónar de Gauss (Pitágoras) [1 E]", 3);
+			_optSkills.AddItem("5. Cañón Orbital (proj_U(V)) [4 E]", 4);
 			_optSkills.ItemSelected += OnSkillSelected;
 			controlColumn.AddChild(_optSkills);
 
@@ -190,7 +190,7 @@ namespace BatallaNavalVectorial.UI
 			// Botón de Disparo
 			_btnFire = new Button
 			{
-				Text = "⚡ EJECUTAR DISPARO VECTORIAL ⚡",
+				Text = "[ EJECUTAR DISPARO VECTORIAL ]",
 				CustomMinimumSize = new Vector2(0, 48)
 			};
 			_btnFire.Pressed += OnFirePressed;
@@ -264,13 +264,13 @@ namespace BatallaNavalVectorial.UI
 
 		private void OnConnected()
 		{
-			_lblStatus.Text = "ESTADO: ONLINE 🟢";
+			_lblStatus.Text = "ESTADO: ONLINE [OK]";
 			_mathConsole.AppendSuccess($"Servidor Python conectado. Bienvenido, {GameSettings.PlayerName}.");
 		}
 
 		private void OnDisconnected()
 		{
-			_lblStatus.Text = "ESTADO: DESCONECTADO 🔴";
+			_lblStatus.Text = "ESTADO: DESCONECTADO [OFFLINE]";
 			_mathConsole.AppendError("Conexión perdida con el servidor WebSocket.");
 		}
 
@@ -289,8 +289,8 @@ namespace BatallaNavalVectorial.UI
 			if (_sessionData == null) return;
 
 			_lblTurn.Text = $"TURNO: {_sessionData.Turno}";
-			_lblEnergy.Text = $"ENERGÍA: {_sessionData.Energia}/{_sessionData.EnergiaMax} ⚡";
-			_lblWind.Text = $"VIENTO: ({_sessionData.Viento[0]}, {_sessionData.Viento[1]}) 💨";
+			_lblEnergy.Text = $"ENERGIA: {_sessionData.Energia}/{_sessionData.EnergiaMax} E";
+			_lblWind.Text = $"VIENTO: ({_sessionData.Viento[0]}, {_sessionData.Viento[1]})";
 
 			_playerRadar.UpdateBoard(_sessionData.TableroJugador);
 			_enemyRadar.UpdateBoard(_sessionData.TableroEnemigo);
@@ -387,7 +387,7 @@ namespace BatallaNavalVectorial.UI
 
 			_isTurnInProgress = true;
 			_btnFire.Disabled = true;
-			_btnFire.Text = "⏳ PROCESANDO COMBATE...";
+			_btnFire.Text = "[ PROCESANDO COMBATE... ]";
 
 			int vx = (int)_sliderVx.Value;
 			int vy = (int)_sliderVy.Value;
@@ -411,7 +411,7 @@ namespace BatallaNavalVectorial.UI
 			{
 				_isTurnInProgress = false;
 				_btnFire.Disabled = false;
-				_btnFire.Text = "⚡ EJECUTAR DISPARO VECTORIAL ⚡";
+				_btnFire.Text = "[ EJECUTAR DISPARO VECTORIAL ]";
 				return;
 			}
 
@@ -439,7 +439,7 @@ namespace BatallaNavalVectorial.UI
 			// 2. Turno y ataque de la IA con suspenso
 			if (turn.AtaqueIa != null)
 			{
-				_mathConsole.AppendWarning("Almirante Vector calculando vector de tiro enemigo... 📡");
+				_mathConsole.AppendWarning("Almirante Vector calculando vector de tiro enemigo...");
 				await ToSignal(GetTree().CreateTimer(0.8f / GameSettings.AnimationSpeed), SceneTreeTimer.SignalName.Timeout);
 
 				var aiOrigin = ExtraerOrigenIa(turn.AtaqueIa);
@@ -458,17 +458,17 @@ namespace BatallaNavalVectorial.UI
 
 				if (_sessionData.Estado == "VICTORIA")
 				{
-					_mathConsole.AppendSuccess("¡VICTORIA TOTAL! Has aniquilado la flota del Almirante Vector.");
+					_mathConsole.AppendSuccess("VICTORIA TOTAL: Has aniquilado la flota del Almirante Vector.");
 				}
 				else if (_sessionData.Estado == "DERROTA")
 				{
-					_mathConsole.AppendError("¡DERROTA! Tu flota ha sido destruida en combate.");
+					_mathConsole.AppendError("DERROTA: Tu flota ha sido destruida en combate.");
 				}
 			}
 
 			_isTurnInProgress = false;
 			_btnFire.Disabled = false;
-			_btnFire.Text = "⚡ EJECUTAR DISPARO VECTORIAL ⚡";
+			_btnFire.Text = "[ EJECUTAR DISPARO VECTORIAL ]";
 		}
 
 		private float ExtraerDistanciaSonar(Dictionary<string, object>? dict)
@@ -574,7 +574,7 @@ namespace BatallaNavalVectorial.UI
 		{
 			_isTurnInProgress = false;
 			_btnFire.Disabled = false;
-			_btnFire.Text = "⚡ EJECUTAR DISPARO VECTORIAL ⚡";
+			_btnFire.Text = "[ EJECUTAR DISPARO VECTORIAL ]";
 			_mathConsole.AppendError(error);
 		}
 	}

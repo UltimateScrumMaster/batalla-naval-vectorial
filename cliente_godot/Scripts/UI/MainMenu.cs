@@ -48,7 +48,7 @@ namespace BatallaNavalVectorial.UI
             // Título Principal
             var lblTitle = new Label
             {
-                Text = "⚓ BATALLA NAVAL VECTORIAL ⚓",
+                Text = "BATALLA NAVAL VECTORIAL",
                 HorizontalAlignment = HorizontalAlignment.Center
             };
             lblTitle.AddThemeFontSizeOverride("font_size", 22);
@@ -147,7 +147,7 @@ namespace BatallaNavalVectorial.UI
             // Botón de Inicio
             _btnStart = new Button
             {
-                Text = "⚡ INICIAR BATALLA NAVAL (VS IA) ⚡",
+                Text = "[ INICIAR BATALLA NAVAL (VS IA) ]",
                 CustomMinimumSize = new Vector2(0, 52)
             };
             _btnStart.AddThemeFontSizeOverride("font_size", 15);
